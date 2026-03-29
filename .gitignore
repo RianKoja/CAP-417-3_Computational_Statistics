@@ -1,0 +1,4 @@
+*.pyi
+*.pdf
+*.png
+.venv

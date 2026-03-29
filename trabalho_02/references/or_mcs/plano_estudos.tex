@@ -1,0 +1,151 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\usepackage{colortbl}
+\usepackage{indentfirst}
+\newcommand{\inlier}{\textit{inlier}}
+\newcommand{\inliers}{\textit{inliers}}
+\newcommand{\outlier}{\textit{outlier}}
+\newcommand{\outliers}{\textit{outliers}}
+\newcommand{\overfit}{\textit{overfit}}
+\pretolerance=10000 % Effectively ignores all overfull box warnings by letting LaTeX stretch spaces indefinitely before failing
+\tolerance=3000 % Works similarly to \pretolerance but for the second pass (with hyphenation). Increasing this allows LaTeX to accept wider spacing before giving up
+
+\title{Plano de Estudos: Conjuntos de Confiança de Modelos Robustos a Outliers com Verificação Formal para Aplicações Espaciais}
+\author{Candidato: Rian Koja \\ Orientadores Sugeridos: TBD} % Dr. Élcio Shiguemori? Marcos Quiles?
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Enunciado do Problema}
+
+A seleção rigorosa de modelos estatísticos é um componente crítico em diversas áreas, incluindo sistemas espaciais e de observação da Terra, particularmente em subsistemas de Controle de Atitude e Órbita (AOCS) e determinação de órbita, mas também em aplicações científicas e industriais. Nestes contextos, a precisão das previsões e a confiabilidade das estimativas de parâmetros são fundamentais para o sucesso das missões do Instituto Nacional de Pesquisas Espaciais (INPE). No entanto, dados provenientes de sensores e instrumentos embarcados são frequentemente contaminados por ruídos, falhas de comunicação e anomalias de medição, resultando em \outliers{} que podem comprometer severamente os métodos tradicionais de seleção de modelos. Frequentemente requerendo análises manuais ou de bom senso, ou outras formas de tratamento prévio e discricionário dos dados.
+
+O procedimento de Conjunto de Confiança de Modelos (MCS - \textit{Model Confidence Set}), proposto por Hansen, Lunde e Nason, oferece uma base estatística rigorosa para determinar, dentro de uma confiança especificada, um subconjunto de modelos que contém os melhores modelos, oferecendo um caminho para seleção de modelos. Contudo, o MCS original, embora considere o quão informativa é a massa de dados, assume a limpeza da mesma e não possui robustez inerente a \outliers{}, uma vez que seus procedimentos de \textit{bootstrap} podem propagar amostras contaminadas.
+
+Por outro lado, o algoritmo RANSAC (\textit{Random Sample Consensus}) é amplamente reconhecido por sua robustez na detecção de \outliers{}, mas é aplicado no ajuste e não an seleção de modelos. Além de carecer das garantias de confiança estatística sequencial do MCS.
+
+Este projeto propõe o desenvolvimento do \textit{Outlier-Robust Model Confidence Set} (OR-MCS), uma estrutura unificada que combina a rejeição de \outliers{} baseada em consenso do RANSAC com as garantias de confiança na seleção de modelos do MCS. A relevância para o INPE reside na praticidade de seleção de modelos seja para análises de fatores que afetam sensores espaciais, seja na comparação de metodologias utilizadas em sensoriamento remoto para estimação de grandezas do Sistema Terrestre. Um exemplo prático seria um teste de hipóteses automatizado para explicar comportamentos anômalos do satélite, como degradação de propulsores, erros de sensores e afins.
+
+\section{Desafios e Métodos}
+
+O desenvolvimento do OR-MCS apresenta desafios teóricos e práticos significativos. O primeiro desafio consiste na integração matemática de um mecanismo de detecção de \outliers{} iterativo e não determinístico (RANSAC) com um procedimento de teste de hipóteses sequencial baseado em \textit{bootstrap} (MCS). É necessário garantir que a eliminação de modelos inferiores não seja enviesada pela presença de dados contaminados, mantendo a validade assintótica da cobertura do conjunto de confiança.
+
+Um segundo desafio inovador é a verificação formal das propriedades estatísticas do algoritmo. Métodos estatísticos complexos raramente são submetidos a provas matemáticas rigorosas em sistemas de prova de teoremas. Para este trabalho, propoe-se utilizar a linguagem Lean 4 para formalizar as propriedades do algoritmo usado como ponto de partida bem como dos novos algoritmos propostos, proporcionando um nível de confiabilidade relevante para aplicações críticas, robustez metodológica e certificação de software.
+
+Os métodos a serem empregados incluem:
+\begin{itemize}
+  \item \textbf{Formulação Teórica}: Uso de teoria estatística avançada para formalizar a integração RANSAC-MCS.
+  \item \textbf{Desenvolvimento Algorítmico}: Implementação de um mecanismo para identificação de \inliers{}, seguido de um \textit{bootstrap} estratificado que respeite a estrutura de dados detectada.
+  \item \textbf{Verificação Formal}: Construção de provas completas em Lean 4 para estabelecer garantias matemáticas sobre o comportamento do algoritmo sob contaminação $\epsilon$.
+  \item \textbf{Validação Empírica}: Testes representativos utilizando conjuntos de dados de telemetria de satélites do INPE e simulações de cenários de contaminação severa.
+\end{itemize}
+
+\section{Resultados Esperados}
+
+Espera-se que esta pesquisa resulte em contribuições significativas tanto para a teoria estatística quanto para a tecnologia espacial brasileira:
+\begin{enumerate}
+  \item \textbf{Contribuição Teórica}: Uma nova metodologia de seleção de modelos que é simultaneamente robusta a \outliers{} e estatisticamente rigorosa em termos de confiança.
+  \item \textbf{Certificação de Software}: Uma biblioteca de seleção de modelos com certificados de correção formal publicada, elevando os padrões de confiabilidade para o software de voo e sistemas de solo do INPE.
+  \item \textbf{Impacto nas Missões INPE}: Melhoria na detecção automática de anomalias e no sistema de controle de atitude e órbita para satélites como a série CBERS e Amazonia, reduzindo a dependência de intervenção humana em caso de análise de anomalias.
+  \item \textbf{Produção Científica}: Publicação de artigos em periódicos de alto impacto nas áreas de computação aplicada, estatística e sistemas aeroespaciais, além da disponibilização de ferramentas de código aberto em Python, Julia, R e Rust (potencial para 10 mil citações).
+\end{enumerate}
+
+\section{Demonstração Preliminar: Motivação do OR-MCS}
+
+Para ilustrar o conceito proposto, foram realizados experimentos preliminares comparando o desempenho de métodos de ajuste tradicionais (Mínimos Quadrados) com métodos robustos (RANSAC) e métodos de inteligência artificial (LightGBM e RANSAC+LightGBM), avaliados posteriormente através do procedimento MCS. O método RANSAC+LightGBM combina a flexibilidade do gradient boosting com a robustez do RANSAC, representando uma abordagem híbrida que une aprendizado de máquina com detecção de \outliers{}. Os experimentos envolvem três tipos de dados com diferentes níveis de contaminação por \outliers{}.
+
+\subsection{Resultados Visuais}
+
+As Figuras \ref{fig:demo_linear}, \ref{fig:demo_quadratic} e \ref{fig:demo_exponential} apresentam comparações entre os quatro métodos avaliados: Mínimos Quadrados, RANSAC, LightGBM e RANSAC+LightGBM para ajustes lineares, quadráticos e exponenciais, respectivamente. Cenário contém três cenários: sem \outliers{}, com alguns \outliers{} (20\%), e com muitos \outliers{} (50\%).
+
+Visualmente, considerando a existência de \outliers{}, é notável o melhor desempenho do RANSAC com o modleo correto dos dados. O RANSAC+LightGBM tem performance curiosamente boa para os casos sem \outliers{}, mas a natureza flexível do modelo cria erros relevantes em casos de ajuste a classificação errônea.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{helpers/demo_results_linear.pdf}
+  \caption{Comparação de ajustes lineares: pontos azuis representam dados verdadeiros (\inliers{}), pontos vermelhos representam \outliers{}. Nos painéis RANSAC e RANSAC+LightGBM, círculos indicam pontos classificados como \inliers{} e cruzes (X) indicam pontos classificados como \outliers{}.}
+  \label{fig:demo_linear}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{helpers/demo_results_quadratic.pdf}
+  \caption{Comparação de ajustes quadráticos: mesma convenção de cores e símbolos da Figura \ref{fig:demo_linear}.}
+  \label{fig:demo_quadratic}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{helpers/demo_results_exponential.pdf}
+  \caption{Comparação de ajustes exponenciais: mesma convenção de cores e símbolos da Figura \ref{fig:demo_linear}.}
+  \label{fig:demo_exponential}
+\end{figure}
+
+A Tabela \ref{tab:demo_results} apresenta métricas preditivas (RMSE, MAE e p-valores do MCS), enquanto a Tabela \ref{tab:confusion_matrices} detalha o desempenho da detecção de \outliers{} através das taxas de Verdadeiros Negativos (TNR) e Falsos Negativos (FNR) para os métodos robustos. Valores mais baixos de RMSE e MAE indicam melhor ajuste, enquanto p-valores do MCS próximos a 1.0 indicam modelos pertencentes ao conjunto de confiança.
+
+\input{helpers/results_table.tex}
+\input{helpers/confusion_matrices.tex}
+
+\subsection{Análise da Demonstração}
+
+Os resultados preliminares ilustram padrões importantes sobre a robustez, detecção de anomalias e propriedades estatísticas dos métodos avaliados. A ideia simples é que em todos os casos com contaminação, o RANSAC com modelo correto é o método mais adequado, e um sistema de seleção de modelos deveria ser capaz de detetar esse fato. Não é o que ocorre, conforme será descrito nas próximas subseções.
+
+\textbf{Cenários sem \outliers{}:} Quando não há contaminação, o modelo correto com e sem RANSAC tem performance idêntica ou muito próxima (apenas caso exponencial tem FPR não nulo). O MCS não tem algoritmo naturalmente robusto à métodos equivalentes, mas isso é tratado manualmente. Ainda Assim, o MCS identifica os casos LS e RANSAC+LS como equivalentes em todos os casos sem \outliers{}. Particularmente o caso exponencial sem \outliers{} foi melhor ajustado pelo RANSAC+LightGBM, o que é um caso de \overfit{}, possivelmente causado por um ponto que embora por construção seja um \inlier, tem erro compativel com a classifcação como \outlier{} (é um verdadeiro \outlier{} no dados sintéticos).
+
+\textbf{Eficácia Diagnóstica (Tabela \ref{tab:confusion_matrices}):} Observa-se que o RANSAC tradicional apresenta uma Taxa de Verdadeiros Negativos (TNR) elevada na maioria dos casos, demonstrando uma capacidade robusta de "limpeza" dos dados sem descartar \inliers{} excessivamente. O RANSAC+LightGBM, embora promissor, apresenta uma Taxa de Falsos Negativos (FNR) elevada em situações de muitos \outliers{}, decorrente de sua flexibilidade e desconhecimento da estrutura dos dados. Ao menos esse fato é capturado pelo MCS, que atribui baixos p-valores para o RANSAC+LightGBM em cenários com \outliers{}. Curiosamente, o MCS destaca o LightGBM puro como o melhor modelo em todos os cenários com \outliers{}, o que é um caso de overfitting e mostra a fragilidade desse método na presença de \outliers{}. O MCS também mostra pouca capacidade de discernir a vantagem do RANSAC+LS sobre o LS puro, em quase todos os casos, apontando p-valores maiores para o LS puro.
+
+\textbf{Interpretação crítica e o OR-MCS:} Naturalmente, o MCS original não foi construído para operar dentro da hipótese de existência de \outliers{}. Nessa situação, ele privilegia métodos com overfitting ou
+
+Estes experimentos preliminares demonstram a necessidade de uma abordagem integrada que não apenas identifique o melhor modelo preditivo, mas também garanta robustez estrutural e interpretabilidade para aplicações críticas em missões espaciais.
+
+\section{Bibliografia}
+
+\begin{thebibliography}{99}
+
+  \bibitem{hansen2011} Hansen, P. R., Lunde, A., \& Nason, J. M. (2011). The model confidence set. \textit{Econometrica}, 79(2), 453-497.
+
+  \bibitem{fischler1981} Fischler, M. A., \& Bolles, R. C. (1981). Random sample consensus: a paradigm for model fitting with applications to image analysis and automated cartography. \textit{Communications of the ACM}, 24(6), 381-395.
+
+  \bibitem{muller2005} Müller, S. (2005). Outlier robust model selection in linear regression. \textit{Journal of the American Statistical Association}, 100(472), 1297-1310.
+
+  \bibitem{lean4} Moura, L. de, \& Ullrich, S. (2021). The Lean 4 theorem prover and programming language. \textit{Automated Deduction -- CADE 28}, 625-635.
+
+  \bibitem{shiguemori2021} Shiguemori, E. H., et al. (2021). Robust methods for satellite image processing and navigation. \textit{INPE Technical Reports}.
+
+  \bibitem{santiago2019} Santiago Júnior, V. A., et al. (2019). Formal methods in the development of space software at INPE. \textit{Journal of Aerospace Technology and Management}.
+
+  \bibitem{huber2009} Huber, P. J., \& Ronchetti, E. M. (2009). \textit{Robust Statistics}. John Wiley \& Sons.
+
+  \bibitem{efron1994} Efron, B., \& Tibshirani, R. J. (1994). \textit{An Introduction to the Bootstrap}. CRC press.
+
+  \bibitem{rousseeuw2005} Rousseeuw, P. J., \& Leroy, A. M. (2005). \textit{Robust Regression and Outlier Detection}. John Wiley \& Sons.
+
+  \bibitem{inpe_cap} INPE. (2023). \textit{Regimento da Pós-Graduação em Computação Aplicada}. Instituto Nacional de Pesquisas Espaciais.
+
+  \bibitem{cbers_data} INPE. (2022). \textit{CBERS-4A Mission Specifications and Data Quality Reports}.
+
+  \bibitem{maronna2019} Maronna, R. A., et al. (2019). \textit{Robust Statistics: Theory and Methods (with R)}. John Wiley \& Sons.
+
+  \bibitem{avigad2021} Avigad, J. (2021). \textit{Theorem Proving in Lean 4}. Lean Community.
+
+  \bibitem{zoubir2012} Zoubir, A. M., et al. (2012). Robust model selection: An overview. \textit{IEEE Signal Processing Magazine}, 29(4), 52-64.
+
+  \bibitem{gentleman2005} Gentleman, R., et al. (2005). \textit{Bioinformatics and Computational Biology Solutions Using R and Bioconductor}. Springer.
+
+\end{thebibliography}
+
+\appendix
+\input{appendix.tex}
+
+\end{document}

@@ -1,0 +1,9 @@
+.claude
+figures
+*.pdf
+*.svg
+*.csv
+*.png
+
+*.egg-info
+__pycache__

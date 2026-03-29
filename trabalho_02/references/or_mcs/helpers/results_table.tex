@@ -1,0 +1,23 @@
+\begin{table}[htbp]
+\centering
+\caption{Comparison of Fitting Methods: RMSE, MAE, and MCS p-values. Color coding: green indicates better performance, red indicates worse performance. See Figures~\ref{fig:demo_linear}, \ref{fig:demo_quadratic}, and \ref{fig:demo_exponential} for visualizations.}
+\label{tab:demo_results}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|cccc|cccc|cccc|}
+\hline
+\multirow{2}{*}{Dataset} & \multicolumn{4}{c|}{RMSE} & \multicolumn{4}{c|}{MAE} & \multicolumn{4}{c|}{MCS p-value} \\
+ & LS & RANSAC & LightGBM & R+LightGBM & LS & RANSAC & LightGBM & R+LightGBM & LS & RANSAC & LightGBM & R+LightGBM \\
+\hline
+Linear (No) & \cellcolor[RGB]{0,255,0}0.090 & \cellcolor[RGB]{0,255,0}0.090 & \cellcolor[RGB]{255,0,0}0.376 & \cellcolor[RGB]{75,255,0}0.132 & \cellcolor[RGB]{0,255,0}0.070 & \cellcolor[RGB]{0,255,0}0.070 & \cellcolor[RGB]{255,0,0}0.263 & \cellcolor[RGB]{84,255,0}0.102 & \cellcolor[RGB]{0,255,0}1.000 & \cellcolor[RGB]{0,255,0}1.000 & \cellcolor[RGB]{255,0,0}0.000 & \cellcolor[RGB]{255,0,0}0.000 \\
+Linear (Some) & \cellcolor[RGB]{28,255,0}1.885 & \cellcolor[RGB]{255,0,0}2.073 & \cellcolor[RGB]{0,255,0}1.874 & \cellcolor[RGB]{255,52,0}2.053 & \cellcolor[RGB]{255,0,0}1.278 & \cellcolor[RGB]{0,255,0}0.901 & \cellcolor[RGB]{255,29,0}1.256 & \cellcolor[RGB]{52,255,0}0.940 & \cellcolor[RGB]{249,255,0}0.874 & \cellcolor[RGB]{255,0,0}0.742 & \cellcolor[RGB]{0,255,0}1.000 & \cellcolor[RGB]{255,0,0}0.742 \\
+Linear (Many) & \cellcolor[RGB]{123,255,0}2.639 & \cellcolor[RGB]{255,0,0}3.208 & \cellcolor[RGB]{0,255,0}2.457 & \cellcolor[RGB]{32,255,0}2.505 & \cellcolor[RGB]{255,0,0}2.230 & \cellcolor[RGB]{255,75,0}2.135 & \cellcolor[RGB]{255,161,0}2.029 & \cellcolor[RGB]{0,255,0}1.592 & \cellcolor[RGB]{255,0,0}0.012 & \cellcolor[RGB]{255,44,0}0.099 & \cellcolor[RGB]{0,255,0}1.000 & \cellcolor[RGB]{127,255,0}0.753 \\
+Quadratic (No) & \cellcolor[RGB]{42,255,0}0.489 & \cellcolor[RGB]{42,255,0}0.489 & \cellcolor[RGB]{255,0,0}1.051 & \cellcolor[RGB]{0,255,0}0.438 & \cellcolor[RGB]{5,255,0}0.380 & \cellcolor[RGB]{5,255,0}0.380 & \cellcolor[RGB]{255,0,0}0.759 & \cellcolor[RGB]{0,255,0}0.376 & \cellcolor[RGB]{125,255,0}0.754 & \cellcolor[RGB]{125,255,0}0.754 & \cellcolor[RGB]{255,0,0}0.000 & \cellcolor[RGB]{0,255,0}1.000 \\
+Quadratic (Some) & \cellcolor[RGB]{6,255,0}2.685 & \cellcolor[RGB]{255,79,0}2.806 & \cellcolor[RGB]{0,255,0}2.683 & \cellcolor[RGB]{255,0,0}2.829 & \cellcolor[RGB]{255,226,0}1.637 & \cellcolor[RGB]{0,255,0}1.383 & \cellcolor[RGB]{255,0,0}1.839 & \cellcolor[RGB]{21,255,0}1.403 & \cellcolor[RGB]{21,255,0}0.987 & \cellcolor[RGB]{255,0,0}0.696 & \cellcolor[RGB]{0,255,0}1.000 & \cellcolor[RGB]{255,0,0}0.696 \\
+Quadratic (Many) & \cellcolor[RGB]{242,255,0}4.376 & \cellcolor[RGB]{255,58,0}4.579 & \cellcolor[RGB]{0,255,0}4.141 & \cellcolor[RGB]{255,0,0}4.636 & \cellcolor[RGB]{255,0,0}3.314 & \cellcolor[RGB]{12,255,0}3.060 & \cellcolor[RGB]{255,224,0}3.200 & \cellcolor[RGB]{0,255,0}3.054 & \cellcolor[RGB]{255,53,0}0.246 & \cellcolor[RGB]{255,53,0}0.246 & \cellcolor[RGB]{0,255,0}1.000 & \cellcolor[RGB]{255,0,0}0.158 \\
+Exponential (No) & \cellcolor[RGB]{128,255,0}0.314 & \cellcolor[RGB]{114,255,0}0.304 & \cellcolor[RGB]{255,0,0}0.583 & \cellcolor[RGB]{0,255,0}0.223 & \cellcolor[RGB]{146,255,0}0.233 & \cellcolor[RGB]{142,255,0}0.232 & \cellcolor[RGB]{255,0,0}0.373 & \cellcolor[RGB]{0,255,0}0.177 & \cellcolor[RGB]{255,8,0}0.017 & \cellcolor[RGB]{255,8,0}0.017 & \cellcolor[RGB]{255,0,0}0.000 & \cellcolor[RGB]{0,255,0}1.000 \\
+Exponential (Some) & \cellcolor[RGB]{0,255,0}1.574 & \cellcolor[RGB]{25,255,0}1.586 & \cellcolor[RGB]{255,215,0}1.711 & \cellcolor[RGB]{255,0,0}1.811 & \cellcolor[RGB]{180,255,0}0.840 & \cellcolor[RGB]{0,255,0}0.724 & \cellcolor[RGB]{255,0,0}1.053 & \cellcolor[RGB]{255,253,0}0.889 & \cellcolor[RGB]{255,0,0}0.913 & \cellcolor[RGB]{255,0,0}0.913 & \cellcolor[RGB]{0,255,0}1.000 & \cellcolor[RGB]{255,0,0}0.913 \\
+Exponential (Many) & \cellcolor[RGB]{0,255,0}2.572 & \cellcolor[RGB]{62,255,0}2.607 & \cellcolor[RGB]{35,255,0}2.592 & \cellcolor[RGB]{255,0,0}2.856 & \cellcolor[RGB]{169,255,0}1.608 & \cellcolor[RGB]{0,255,0}1.446 & \cellcolor[RGB]{255,0,0}1.933 & \cellcolor[RGB]{255,194,0}1.747 & \cellcolor[RGB]{208,255,0}0.765 & \cellcolor[RGB]{224,255,0}0.747 & \cellcolor[RGB]{0,255,0}1.000 & \cellcolor[RGB]{255,0,0}0.424 \\
+\hline
+\end{tabular}
+}%
+\end{table}

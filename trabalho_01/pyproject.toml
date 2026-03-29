@@ -1,0 +1,18 @@
+[project]
+name = "trabalho-01"
+version = "0.1.0"
+description = "Exercises for the course"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "matplotlib>=3.10.8",
+    "maturin>=1.12.6",
+    "numpy>=2.4.3",
+    "pandas>=3.0.1",
+    "rust-rng",
+    "scipy>=1.17.1",
+    "statsmodels>=0.14.6",
+]
+
+[tool.uv.sources]
+rust-rng = { path = "rust_rng", editable = true }

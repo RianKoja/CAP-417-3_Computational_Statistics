@@ -1,0 +1,23 @@
+\begin{table}[htbp]
+\centering
+\caption{Confusion Matrix Metrics for RANSAC-based Methods. TPR: True Positive Rate, FPR: False Positive Rate, TNR: True Negative Rate, FNR: False Negative Rate. Values in \%. Color coding: green indicates better performance, red indicates worse.}
+\label{tab:confusion_matrices}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|cc|cccc|cccc|}
+\hline
+\multirow{2}{*}{Dataset} & \multicolumn{2}{c|}{Data} & \multicolumn{4}{c|}{RANSAC} & \multicolumn{4}{c|}{RANSAC+LightGBM} \\
+ & Inliers & Outliers & TPR & FPR & TNR & FNR & TPR & FPR & TNR & FNR \\
+\hline
+Linear (No) & 100 & 0 & - & \cellcolor[RGB]{0,255,0}0.0 & \cellcolor[RGB]{0,255,0}100.0 & - & - & \cellcolor[RGB]{0,255,0}0.0 & \cellcolor[RGB]{0,255,0}100.0 & - \\
+Linear (Some) & 80 & 20 & \cellcolor[RGB]{101,255,0}80.0 & \cellcolor[RGB]{0,255,0}0.0 & \cellcolor[RGB]{0,255,0}100.0 & \cellcolor[RGB]{101,255,0}20.0 & \cellcolor[RGB]{153,255,0}70.0 & \cellcolor[RGB]{0,255,0}0.0 & \cellcolor[RGB]{0,255,0}100.0 & \cellcolor[RGB]{153,255,0}30.0 \\
+Linear (Many) & 50 & 50 & \cellcolor[RGB]{122,255,0}76.0 & \cellcolor[RGB]{0,255,0}0.0 & \cellcolor[RGB]{0,255,0}100.0 & \cellcolor[RGB]{122,255,0}24.0 & \cellcolor[RGB]{255,163,0}32.0 & \cellcolor[RGB]{20,255,0}4.0 & \cellcolor[RGB]{20,255,0}96.0 & \cellcolor[RGB]{255,163,0}68.0 \\
+Quadratic (No) & 100 & 0 & - & \cellcolor[RGB]{0,255,0}0.0 & \cellcolor[RGB]{0,255,0}100.0 & - & - & \cellcolor[RGB]{0,255,0}0.0 & \cellcolor[RGB]{0,255,0}100.0 & - \\
+Quadratic (Some) & 80 & 20 & \cellcolor[RGB]{76,255,0}85.0 & \cellcolor[RGB]{0,255,0}0.0 & \cellcolor[RGB]{0,255,0}100.0 & \cellcolor[RGB]{76,255,0}15.0 & \cellcolor[RGB]{153,255,0}70.0 & \cellcolor[RGB]{6,255,0}1.2 & \cellcolor[RGB]{6,255,0}98.8 & \cellcolor[RGB]{153,255,0}30.0 \\
+Quadratic (Many) & 50 & 50 & \cellcolor[RGB]{153,255,0}70.0 & \cellcolor[RGB]{10,255,0}2.0 & \cellcolor[RGB]{10,255,0}98.0 & \cellcolor[RGB]{153,255,0}30.0 & \cellcolor[RGB]{224,255,0}56.0 & \cellcolor[RGB]{20,255,0}4.0 & \cellcolor[RGB]{20,255,0}96.0 & \cellcolor[RGB]{224,255,0}44.0 \\
+Exponential (No) & 100 & 0 & - & \cellcolor[RGB]{30,255,0}6.0 & \cellcolor[RGB]{30,255,0}94.0 & - & - & \cellcolor[RGB]{0,255,0}0.0 & \cellcolor[RGB]{0,255,0}100.0 & - \\
+Exponential (Some) & 80 & 20 & \cellcolor[RGB]{76,255,0}85.0 & \cellcolor[RGB]{44,255,0}8.8 & \cellcolor[RGB]{44,255,0}91.2 & \cellcolor[RGB]{76,255,0}15.0 & \cellcolor[RGB]{127,255,0}75.0 & \cellcolor[RGB]{6,255,0}1.2 & \cellcolor[RGB]{6,255,0}98.8 & \cellcolor[RGB]{127,255,0}25.0 \\
+Exponential (Many) & 50 & 50 & \cellcolor[RGB]{183,255,0}64.0 & \cellcolor[RGB]{50,255,0}10.0 & \cellcolor[RGB]{50,255,0}90.0 & \cellcolor[RGB]{183,255,0}36.0 & \cellcolor[RGB]{244,255,0}52.0 & \cellcolor[RGB]{30,255,0}6.0 & \cellcolor[RGB]{30,255,0}94.0 & \cellcolor[RGB]{244,255,0}48.0 \\
+\hline
+\end{tabular}
+}%
+\end{table}

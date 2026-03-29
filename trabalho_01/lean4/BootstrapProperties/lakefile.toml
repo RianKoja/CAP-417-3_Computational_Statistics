@@ -1,0 +1,15 @@
+name = "BootstrapProperties"
+version = "0.1.0"
+defaultTargets = ["bootstrapproperties"]
+
+[[lean_lib]]
+name = "BootstrapProperties"
+
+[[lean_exe]]
+name = "bootstrapproperties"
+root = "Main"
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "v4.16.0"
