@@ -7,4 +7,6 @@ The problem statements are available in STATEMENTS.md~
 
 Theory notes are available in theory_notes/ folder. All files show be read for context.
 
+the report and code shall be developed in english.
 
+create a makefile with a command for updating the report. 

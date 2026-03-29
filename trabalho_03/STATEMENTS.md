@@ -11,3 +11,13 @@ A sample of 25 adult males from a city showed that the cholesterol level has a m
 Explain central limit theorem to show what the distribution of the sample mean and sample standard deviation is. Then create the confidence interval analytically for both.
 
 # Problem 3
+This is an optional exercise that involves using a problem with my own data.
+We'll take isnpiration from trabalho_03/references/or_mcs/helpers/demo_figs.py
+
+We'll create a similar script, but remember that we'll be using typst for the final document and we want to demosntrate the MCS procedure. 
+
+First, we'll add an explanation of the MCS procedure. Explain the main theorems from the Hanse, Lunde, Nason paper, then explain how to itnerpret results.
+
+Second let's show an example where it shines: Is actually points out the best model among a set of candidate models. We'll use different functions with added noise, create a training and test set, and then use MCS to select the best model. We'll plot the results to show that MCS is able to select the best model.
+
+Third, let's show an example where it fails: We'll show again the plot that is currently on references/or_mcs/helpers/demo_results_linear.svg and whose MCS p-values and other metrics are already computed. We'll explain why MCS and other methods fail to identify the best model in this case.
