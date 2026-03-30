@@ -119,12 +119,53 @@ For each population we estimated the mean two ways, repeated 2,000 times:
 
 == CLT and the Distribution of the Sample Statistics
 
-When the population is $cal(N)(mu, sigma^2)$ and $sigma$ is *unknown*, the relevant sampling distributions are:
+=== The Chi-Squared Distribution
 
-- *Sample mean:* the $t$-statistic $T = (bar(X) - mu) / (S / sqrt(n))$ follows $t(n-1)$ *exactly* for every $n >= 2$.
-- *Sample variance:* the statistic $(n-1)S^2/sigma^2$ follows $chi^2(n-1)$ exactly.
+Let $Z_1, Z_2, dots, Z_k$ be independent standard normal random variables, $Z_i tilde.op cal(N)(0,1)$.  The random variable
 
-These exact results follow from the normality of the population; the CLT provides the approximate versions for non-normal populations.  @clt_conv illustrates how quickly the sampling distribution of $bar(X)$ approaches normality as $n$ grows.
+$ Q = sum_(i=1)^k Z_i^2 $
+
+follows a *chi-squared distribution with $k$ degrees of freedom*, written $Q tilde.op chi^2(k)$.  Its PDF is
+
+$ f(q; k) = frac(q^(k/2 - 1) e^(-q/2), 2^(k/2) Gamma(k/2)), quad q > 0, $
+
+with mean $k$ and variance $2k$.  The distribution is right-skewed for small $k$ and approaches normality as $k arrow.r infinity$.
+
+=== The Student's $t$-Distribution
+
+Let $Z tilde.op cal(N)(0,1)$ and $V tilde.op chi^2(nu)$ be independent.  The ratio
+
+$ T = frac(Z, sqrt(V slash nu)) $
+
+follows a *Student's $t$-distribution with $nu$ degrees of freedom*, written $T tilde.op t(nu)$.  Its PDF is
+
+$ f(t; nu) = frac(Gamma((nu+1)/2), sqrt(nu pi) Gamma(nu/2)) lr((1 + t^2/nu))^(-(nu+1)/2), quad t in bb(R). $
+
+The distribution is symmetric around zero, heavier-tailed than the normal, and converges to $cal(N)(0,1)$ as $nu arrow.r infinity$.
+
+=== Exact Sampling Distributions Under Normality
+
+Assume $X_1, dots, X_n tilde.op^("i.i.d.") cal(N)(mu, sigma^2)$.  Define the sample mean and unbiased sample variance in the usual way:
+
+$ bar(X) = frac(1,n) sum_(i=1)^n X_i, quad S^2 = frac(1, n-1) sum_(i=1)^n (X_i - bar(X))^2. $
+
+*Distribution of $(n-1)S^2/sigma^2$.*  Each standardised deviation $(X_i - mu)/sigma$ is $cal(N)(0,1)$, so $sum_i (X_i - mu)^2 / sigma^2 tilde.op chi^2(n)$.  The algebraic identity
+
+$ sum_(i=1)^n frac((X_i - mu)^2, sigma^2) = frac((n-1)S^2, sigma^2) + frac((bar(X) - mu)^2, sigma^2/n) $
+
+decomposes this $chi^2(n)$ quantity into two independent terms (independence follows from the fact that $bar(X)$ and $S^2$ are independent for normal populations — a consequence of the normal distribution being the unique distribution for which the sample mean and sample variance are independent).  The second term is $chi^2(1)$, so by the additive property of the chi-squared distribution:
+
+$ frac((n-1)S^2, sigma^2) tilde.op chi^2(n-1). $
+
+*Distribution of the $t$-statistic.*  Because $bar(X) tilde.op cal(N)(mu, sigma^2/n)$, the standardised mean $Z = (bar(X) - mu)/(sigma/sqrt(n))$ is $cal(N)(0,1)$.  Writing $S$ in place of the unknown $sigma$ introduces $(n-1)S^2/sigma^2 tilde.op chi^2(n-1)$ into the denominator.  Specifically,
+
+$ T = frac(bar(X) - mu, S/sqrt(n)) = frac(Z, sqrt([(n-1)S^2/sigma^2] \/ (n-1))). $
+
+Since $Z$ and $(n-1)S^2/sigma^2$ are independent (by the result above), this ratio matches exactly the definition of a $t$-distributed variable with $nu = n-1$:
+
+$ T = frac(bar(X) - mu, S / sqrt(n)) tilde.op t(n-1). $
+
+This is an *exact* result for every $n >= 2$ when the population is normal.  For non-normal populations the CLT guarantees that $T$ is *approximately* $cal(N)(0,1)$ for large $n$, but the exact $t(n-1)$ result no longer holds in finite samples.  @clt_conv illustrates how quickly the sampling distribution of $bar(X)$ approaches normality as $n$ grows.
 
 #figure(
   image("figures/problem2_clt.svg", width: 95%),

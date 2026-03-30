@@ -1,5 +1,6 @@
 # Makefile for Computational Statistics — Assignment 03
 
+
 VENV        = references/or_mcs/.venv
 PYTHON_VENV = $(VENV)/bin/python
 # Fallback: use uv for problems 1 & 2 (no arch dependency)
