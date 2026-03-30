@@ -121,15 +121,29 @@ For each population we estimated the mean two ways, repeated 2,000 times:
 
 === The Chi-Squared Distribution
 
-Let $Z_1, Z_2, dots, Z_k$ be independent standard normal random variables, $Z_i tilde.op cal(N)(0,1)$.  The random variable
+Let $Z_1, Z_2, dots, Z_k$ be independent standard normal random variables, $Z_i tilde.op cal(N)(0,1)$.  By definition the random variable
 
 $ Q = sum_(i=1)^k Z_i^2 $
 
-follows a *chi-squared distribution with $k$ degrees of freedom*, written $Q tilde.op chi^2(k)$.  Its PDF is
+follows the *chi-squared distribution with $k$ degrees of freedom*, $Q tilde.op chi^2(k)$.  We derive its PDF via the moment generating function (MGF).
 
-$ f(q; k) = frac(q^(k/2 - 1) e^(-q/2), 2^(k/2) Gamma(k/2)), quad q > 0, $
+*Step 1: MGF of $Z^2$.*  For $Z tilde.op cal(N)(0,1)$ and $t < 1/2$,
 
-with mean $k$ and variance $2k$.  The distribution is right-skewed for small $k$ and approaches normality as $k arrow.r infinity$.
+$ M_(Z^2)(t) = bb(E)[e^(t Z^2)] = frac(1, sqrt(2pi)) integral_(-infinity)^(infinity) e^(t z^2) e^(-z^2 slash 2) d z = frac(1, sqrt(2pi)) integral_(-infinity)^(infinity) exp lr((-frac(z^2(1-2t), 2))) d z. $
+
+The integrand is proportional to a Gaussian with variance $(1-2t)^(-1)$, so the integral evaluates to $sqrt(2pi \/ (1-2t))$, giving
+
+$ M_(Z^2)(t) = (1-2t)^(-1/2). $
+
+*Step 2: MGF of $Q$.*  Because the $Z_i$ are independent,
+
+$ M_Q(t) = product_(i=1)^k M_(Z_i^2)(t) = (1-2t)^(-k/2), quad t < 1/2. $
+
+*Step 3: Identification.*  A Gamma distribution with shape $alpha$ and rate $beta$ has MGF $(1 - t/beta)^(-alpha)$.  Setting $alpha = k/2$ and $beta = 1/2$ yields $(1-2t)^(-k/2)$, which matches $M_Q$ exactly.  Since the MGF uniquely determines the distribution (on an open neighbourhood of $t=0$), $Q$ follows a $"Gamma"(k/2, 1/2)$ distribution with PDF
+
+$ f(q; k) = frac((1/2)^(k/2), Gamma(k/2)) q^(k/2-1) e^(-q/2) = frac(q^(k/2-1) e^(-q/2), 2^(k/2) Gamma(k/2)), quad q > 0. $
+
+A further corollary of the MGF is the *additive property*: independent $chi^2(k_1)$ and $chi^2(k_2)$ variables sum to a $chi^2(k_1+k_2)$ variable, since their MGFs multiply as $(1-2t)^(-(k_1+k_2)/2)$.  The distribution has mean $k$ and variance $2k$; it is right-skewed for small $k$ and approaches normality as $k arrow.r infinity$.
 
 === The Student's $t$-Distribution
 
@@ -137,11 +151,26 @@ Let $Z tilde.op cal(N)(0,1)$ and $V tilde.op chi^2(nu)$ be independent.  The rat
 
 $ T = frac(Z, sqrt(V slash nu)) $
 
-follows a *Student's $t$-distribution with $nu$ degrees of freedom*, written $T tilde.op t(nu)$.  Its PDF is
+follows the *Student's $t$-distribution with $nu$ degrees of freedom*, $T tilde.op t(nu)$.  We derive its PDF by conditioning on $V$ and marginalising.
 
-$ f(t; nu) = frac(Gamma((nu+1)/2), sqrt(nu pi) Gamma(nu/2)) lr((1 + t^2/nu))^(-(nu+1)/2), quad t in bb(R). $
+*Conditional distribution.*  Given $V = v$, we have $T | V = v ~ cal(N)(0, nu/v)$, so
 
-The distribution is symmetric around zero, heavier-tailed than the normal, and converges to $cal(N)(0,1)$ as $nu arrow.r infinity$.
+$ f_(T|V)(t | v) = sqrt(frac(v, 2pi nu)) exp lr((-frac(t^2 v, 2nu))). $
+
+*Marginal PDF.*  Multiplying by the $chi^2(nu)$ density $f_V(v) = v^(nu/2-1) e^(-v/2) \/ (2^(nu/2) Gamma(nu/2))$ and integrating,
+
+$ f_T(t) &= integral_0^infinity f_(T|V)(t|v) f_V(v) d v \
+  &= frac(1, sqrt(2pi nu) dot 2^(nu/2) Gamma(nu/2)) integral_0^infinity v^((nu+1)/2 - 1) exp lr((-frac(v, 2) lr((1 + frac(t^2, nu))))) d v. $
+
+*Evaluating the integral.*  Substitute $u = frac(v, 2)(1 + t^2 \/ nu)$, i.e. $v = 2u \/ (1 + t^2 \/ nu)$, $d v = 2 \/ (1 + t^2 \/ nu) d u$:
+
+$ integral_0^infinity v^((nu+1)/2-1) e^(-frac(v,2)(1+t^2/nu)) d v = frac(2^((nu+1)/2), (1+t^2/nu)^((nu+1)/2)) integral_0^infinity u^((nu+1)/2-1) e^(-u) d u = frac(2^((nu+1)/2) Gamma((nu+1)/2), (1+t^2/nu)^((nu+1)/2)). $
+
+*Assembling the result.*  Substituting back, the factors $sqrt(2pi nu) dot 2^(nu/2) = sqrt(2) dot sqrt(pi nu) dot 2^(nu/2) = 2^((nu+1)/2) sqrt(pi nu)$ cancel the power of 2 in the numerator:
+
+$ f_T(t) = frac(Gamma((nu+1)/2), sqrt(nu pi) Gamma(nu/2)) lr((1 + frac(t^2, nu)))^(-(nu+1)/2), quad t in bb(R). $
+
+The distribution is symmetric about zero, heavier-tailed than the normal (the tails decay as $|t|^(-(nu+1))$ rather than exponentially), and $t(nu) arrow.r cal(N)(0,1)$ as $nu arrow.r infinity$.
 
 === Exact Sampling Distributions Under Normality
 
