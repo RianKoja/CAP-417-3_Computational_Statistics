@@ -10,3 +10,5 @@ Theory notes are available in theory_notes/ folder. All files show be read for c
 the report and code shall be developed in english.
 
 create a makefile with a command for updating the report. 
+
+Use one script for each problme on src/ folder.
