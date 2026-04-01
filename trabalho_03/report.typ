@@ -40,41 +40,41 @@
 
 == Theory of Sampling Distribution
 
-The *sampling distribution of the sample mean* $bar(X)$ describes how the average of $n$ independent and identically distributed (i.i.d.) draws from a population varies from sample to sample.  Given a population with mean $mu$ and variance $sigma^2$, two key properties hold for any $n$:
+The *sampling distribution of the sample mean* $overline(X)$ describes how the average of $n$ independent and identically distributed (i.i.d.) draws from a population varies from sample to sample.  Given a population with mean $mu$ and variance $sigma^2$, two key properties hold for any $n$:
 
-$ bb(E)[bar(X)] = mu, quad quad "Var"(bar(X)) = sigma^2 / n $
+$ bb(E)[overline(X)] = mu, quad quad "Var"(overline(X)) = sigma^2 / n $
 
 The *standard error* $"SE" = sigma / sqrt(n)$ measures how tightly the sample means cluster around $mu$ and decreases as $sqrt(n)$ grows.
 
 === Discrete Case
 
-Let $X$ be a discrete random variable with PMF $p(x_i)$.  The sample mean $bar(X) = 1/n sum_(i=1)^n X_i$ is itself discrete, taking values on a finite or countable set.  Its distribution is obtained by convolving the PMF of $X$ with itself $n$ times and scaling by $1/n$:
+Let $X$ be a discrete random variable with PMF $p(x_i)$.  The sample mean $overline(X) = 1/n sum_(i=1)^n X_i$ is itself discrete, taking values on a finite or countable set.  Its distribution is obtained by convolving the PMF of $X$ with itself $n$ times and scaling by $1/n$:
 
-$ P(bar(X) = z) = sum_((x_1, dots, x_n) in S_n(z)) product_(i=1)^n p(x_i), $
+$ P(overline(X) = z) = sum_((x_1, dots, x_n) in S_n(z)) product_(i=1)^n p(x_i), $
 
 where $S_n(z)$ is the set of all $n$-tuples whose average equals $z$.  For $X tilde "Bernoulli"(p)$, the sum $sum X_i tilde "Binomial"(n,p)$, so
 
-$ P(bar(X) = k/n) = binom(n, k) p^k (1-p)^(n-k), quad k = 0, 1, dots, n. $
+$ P(overline(X) = k/n) = binom(n, k) p^k (1-p)^(n-k), quad k = 0, 1, dots, n. $
 
-As $n arrow.r infinity$, the CLT ensures that $sqrt(n)(bar(X) - p)$ converges to $cal(N)(0, p(1-p))$.
+As $n arrow.r infinity$, the CLT ensures that $sqrt(n)(overline(X) - p)$ converges to $cal(N)(0, p(1-p))$.
 
 === Continuous Case
 
-For a continuous random variable with PDF $f_X$, the PDF of $bar(X)$ is obtained via $n$-fold convolution followed by scaling:
+For a continuous random variable with PDF $f_X$, the PDF of $overline(X)$ is obtained via $n$-fold convolution followed by scaling:
 
-$ f_(bar(X))(t) = n dot (f_X^(*n))(n t). $
+$ f_(overline(X))(t) = n dot (f_X^(*n))(n t). $
 
-For example, if $X tilde "Exponential"(lambda)$, the sum $sum X_i tilde "Gamma"(n, lambda)$, so $bar(X) tilde "Gamma"(n, n lambda)$—a distribution that becomes increasingly symmetric and bell-shaped as $n$ grows.
+For example, if $X tilde "Exponential"(lambda)$, the sum $sum X_i tilde "Gamma"(n, lambda)$, so $overline(X) tilde "Gamma"(n, n lambda)$—a distribution that becomes increasingly symmetric and bell-shaped as $n$ grows.
 
 === Central Limit Theorem
 
 If the population has mean $mu$ and *finite* variance $sigma^2$, then for any fixed $t$:
 
-$ lim_(n arrow.r infinity) P( (bar(X) - mu) / (sigma/sqrt(n)) <= t ) = Phi(t), $
+$ lim_(n arrow.r infinity) P( (overline(X) - mu) / (sigma/sqrt(n)) <= t ) = Phi(t), $
 
 where $Phi$ is the standard Normal CDF.  Equivalently, for large $n$:
 
-$ bar(X) #h(0.3em) approx^d #h(0.3em) cal(N)(mu, sigma^2/n). $
+$ overline(X) #h(0.3em) approx^d #h(0.3em) cal(N)(mu, sigma^2/n). $
 
 This result holds regardless of the original distribution shape, provided $sigma^2 < infinity$.
 
@@ -115,7 +115,7 @@ For each population we estimated the mean two ways, repeated 2,000 times:
 = Problem 2: Central Limit Theorem and Confidence Intervals
 // ============================================================
 
-*Motivation problem.* A sample of $n=25$ adult males shows cholesterol level mean $bar(x)=186$ and standard deviation $s=12$.  The population is assumed to follow a Normal distribution.  Obtain the 95% confidence interval for the mean.
+*Motivation problem.* A sample of $n=25$ adult males shows cholesterol level mean $overline(x)=186$ and standard deviation $s=12$.  The population is assumed to follow a Normal distribution.  Obtain the 95% confidence interval for the mean.
 
 == CLT and the Distribution of the Sample Statistics
 
@@ -184,25 +184,25 @@ The distribution is symmetric about zero, heavier-tailed than the normal (the ta
 
 Assume $X_1, dots, X_n tilde.op^("i.i.d.") cal(N)(mu, sigma^2)$.  Define the sample mean and unbiased sample variance in the usual way:
 
-$ bar(X) = frac(1, n) sum_(i=1)^n X_i, quad S^2 = frac(1, n-1) sum_(i=1)^n (X_i - bar(X))^2. $
+$ overline(X) = frac(1, n) sum_(i=1)^n X_i, quad S^2 = frac(1, n-1) sum_(i=1)^n (X_i - overline(X))^2. $
 
 *Distribution of $(n-1)S^2/sigma^2$.*  Each standardised deviation $(X_i - mu)/sigma$ is $cal(N)(0,1)$, so $sum_i (X_i - mu)^2 / sigma^2 tilde.op chi^2(n)$.  The algebraic identity
 
-$ sum_(i=1)^n frac((X_i - mu)^2, sigma^2) = frac((n-1)S^2, sigma^2) + frac((bar(X) - mu)^2, sigma^2/n) $
+$ sum_(i=1)^n frac((X_i - mu)^2, sigma^2) = frac((n-1)S^2, sigma^2) + frac((overline(X) - mu)^2, sigma^2/n) $
 
-decomposes this $chi^2(n)$ quantity into two independent terms (independence follows from the fact that $bar(X)$ and $S^2$ are independent for normal populations — a consequence of the normal distribution being the unique distribution for which the sample mean and sample variance are independent).  The second term is $chi^2(1)$, so by the additive property of the chi-squared distribution:
+decomposes this $chi^2(n)$ quantity into two independent terms (independence follows from the fact that $overline(X)$ and $S^2$ are independent for normal populations — a consequence of the normal distribution being the unique distribution for which the sample mean and sample variance are independent).  The second term is $chi^2(1)$, so by the additive property of the chi-squared distribution:
 
 $ frac((n-1)S^2, sigma^2) tilde.op chi^2(n-1). $
 
-*Distribution of the $t$-statistic.*  Because $bar(X) tilde.op cal(N)(mu, sigma^2/n)$, the standardised mean $Z = (bar(X) - mu)/(sigma/sqrt(n))$ is $cal(N)(0,1)$.  Writing $S$ in place of the unknown $sigma$ introduces $(n-1)S^2/sigma^2 tilde.op chi^2(n-1)$ into the denominator.  Specifically,
+*Distribution of the $t$-statistic.*  Because $overline(X) tilde.op cal(N)(mu, sigma^2/n)$, the standardised mean $Z = (overline(X) - mu)/(sigma/sqrt(n))$ is $cal(N)(0,1)$.  Writing $S$ in place of the unknown $sigma$ introduces $(n-1)S^2/sigma^2 tilde.op chi^2(n-1)$ into the denominator.  Specifically,
 
-$ T = frac(bar(X) - mu, S/sqrt(n)) = frac(Z, sqrt([(n-1)S^2/sigma^2] \/ (n-1))). $
+$ T = frac(overline(X) - mu, S/sqrt(n)) = frac(Z, sqrt([(n-1)S^2/sigma^2] \/ (n-1))). $
 
 Since $Z$ and $(n-1)S^2/sigma^2$ are independent (by the result above), this ratio matches exactly the definition of a $t$-distributed variable with $nu = n-1$:
 
-$ T = frac(bar(X) - mu, S / sqrt(n)) tilde.op t(n-1). $
+$ T = frac(overline(X) - mu, S / sqrt(n)) tilde.op t(n-1). $
 
-This is an *exact* result for every $n >= 2$ when the population is normal.  For non-normal populations the CLT guarantees that $T$ is *approximately* $cal(N)(0,1)$ for large $n$, but the exact $t(n-1)$ result no longer holds in finite samples.  @clt_conv illustrates how quickly the sampling distribution of $bar(X)$ approaches normality as $n$ grows.
+This is an *exact* result for every $n >= 2$ when the population is normal.  For non-normal populations the CLT guarantees that $T$ is *approximately* $cal(N)(0,1)$ for large $n$, but the exact $t(n-1)$ result no longer holds in finite samples.  @clt_conv illustrates how quickly the sampling distribution of $overline(X)$ approaches normality as $n$ grows.
 
 #figure(
   image("figures/problem2_clt.svg", width: 95%),
@@ -217,23 +217,23 @@ This is an *exact* result for every $n >= 2$ when the population is normal.  For
 
 Because $sigma$ is unknown we use the $t$-distribution with $"df" = n-1 = 24$ degrees of freedom:
 
-$ "CI"_mu = bar(x) plus.minus t_(alpha/2,, n-1) dot frac(s, sqrt(n)) $
+$ "CI"_mu = overline(x) plus.minus t_(alpha/2, n-1) dot frac(s, sqrt(n)) $
 
 For $alpha=0.05$: $t_(0.025, 24) approx 2.064$, $s/sqrt(n) = 12/5 = 2.4$.
 
-$ "CI"_mu = 186 plus.minus 2.064 times 2.4 = [181.05,, 190.95] $
+$ "CI"_mu = 186 plus.minus 2.064 times 2.4 = [181.05, 190.95] $
 
 == Confidence Interval for the Standard Deviation
 
 The 95% CI for $sigma^2$ uses the $chi^2$ distribution:
 
-$ "CI"_(sigma^2) = [ frac((n-1)s^2, chi^2_(1-alpha/2,, n-1)),, frac((n-1)s^2, chi^2_(alpha/2,, n-1)) ] $
+$ "CI"_(sigma^2) = [ frac((n-1)s^2, chi^2_(1-alpha/2, n-1)), frac((n-1)s^2, chi^2_(alpha/2, n-1)) ] $
 
 For $alpha=0.05$: $chi^2_(0.025,24) approx 12.40$ and $chi^2_(0.975,24) approx 39.36$.
 
-$ "CI"_(sigma^2) = [ frac(24 times 144, 39.36),, frac(24 times 144, 12.40) ] = [87.75,, 278.71] $
+$ "CI"_(sigma^2) = [ frac(24 times 144, 39.36), frac(24 times 144, 12.40) ] = [87.75, 278.71] $
 
-$ "CI"_sigma = [sqrt(87.75),, sqrt(278.71)] = [9.37,, 16.69] $
+$ "CI"_sigma = [sqrt(87.75), sqrt(278.71)] = [9.37, 16.69] $
 
 #figure(
   image("figures/problem2_ci.svg", width: 95%),
@@ -278,9 +278,9 @@ The procedure requires an equivalence test $delta_cal(M)$ and an elimination rul
 
 === Test Statistics
 
-Two statistics can serve as $delta_cal(M)$ @hansen2011.  Writing $bar(d)_(i dot) = m^(-1) sum_(j in cal(M)) bar(d)_(i j)$ for the average relative loss of model $i$, the *t-statistics*
+Two statistics can serve as $delta_cal(M)$ @hansen2011.  Writing $overline(d)_(i dot) = m^(-1) sum_(j in cal(M)) overline(d)_(i j)$ for the average relative loss of model $i$, the *t-statistics*
 
-$ t_(i dot) = bar(d)_(i dot) \/ sqrt(hat("var")(bar(d)_(i dot))) $
+$ t_(i dot) = overline(d)_(i dot) \/ sqrt(hat("var")(overline(d)_(i dot))) $
 
 lead to two tests:
 
@@ -414,7 +414,7 @@ The comparison table already hints at a failure mode: on linearly-generated data
 *Why does MCS fail here?*  Three compounding reasons:
 
 + *Non-robust loss.* MSE assigns equal weight to all residuals.  A circular outlier at distance $r$ from the true line contributes $r^2 approx 9$–$36$ to the loss, dwarfing inlier residuals ($approx 0.25$).  Flexible models partially interpolate the outlier cluster, lowering their apparent MSE.
-+ *Bootstrap contamination.* The stationary bootstrap resamples the full dataset; resampled batches contain outliers in proportion to their frequency, biasing the variance estimate $hat("var")(bar(d)_(i j))$ and distorting the EPA test statistics.
++ *Bootstrap contamination.* The stationary bootstrap resamples the full dataset; resampled batches contain outliers in proportion to their frequency, biasing the variance estimate $hat("var")(overline(d)_(i j))$ and distorting the EPA test statistics.
 + *Breakdown point of zero.* The standard MCS has no robustness guarantee: Theorem 1 assumes the same stationary distribution holds throughout, but outliers create a mixture that violates this in practice.
 
 When evaluated on clean inliers only (right panel of @mcs_fails), MCS correctly recovers Linear LS as the sole member of the confidence set — confirming that the procedure itself is sound, but the loss function is not.  This motivates the research direction of *outlier-robust* model confidence sets.
