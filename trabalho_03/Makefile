@@ -1,9 +1,7 @@
 # Makefile for Computational Statistics — Assignment 03
 
-VENV        = references/or_mcs/.venv
-PYTHON_VENV = $(VENV)/bin/python
-# Fallback: use uv for problems 1 & 2 (no arch dependency)
-PYTHON_UV   = uv run --with numpy --with scipy --with matplotlib python3
+PYTHON_UV    = uv run --with numpy --with scipy --with matplotlib python3
+PYTHON_UV_P3 = uv run python3
 TYPST       = typst compile
 
 FIGURES_DIR = figures
@@ -41,8 +39,7 @@ $(FIGURES_DIR)/.stamp.p2: $(SRC_DIR)/problem2.py
 	@touch $@
 
 $(FIGURES_DIR)/.stamp.p3: $(SRC_DIR)/problem3.py
-	mkdir -p $(FIGURES_DIR)
-	$(PYTHON_VENV) $<
+	$(PYTHON_UV_P3) $<
 	@touch $@
 
 # ── Report ────────────────────────────────────────────────────────────────────
@@ -69,4 +66,4 @@ watch:
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 clean:
-	rm -rf $(FIGURES_DIR) report.pdf
+	rm -rf $(FIGURES_DIR) generated report.pdf

@@ -129,7 +129,9 @@ follows the *chi-squared distribution with $k$ degrees of freedom*, $Q tilde.op 
 
 *Step 1: MGF of $Z^2$.*  For $Z tilde.op cal(N)(0,1)$ and $t < 1/2$,
 
-$ M_(Z^2)(t) = bb(E)[e^(t Z^2)] = frac(1, sqrt(2pi)) integral_(-infinity)^(infinity) e^(t z^2) e^(-z^2 slash 2) d z = frac(1, sqrt(2pi)) integral_(-infinity)^(infinity) exp lr((-frac(z^2(1-2t), 2))) d z. $
+$
+  M_(Z^2)(t) = bb(E)[e^(t Z^2)] = frac(1, sqrt(2pi)) integral_(-infinity)^(infinity) e^(t z^2) e^(-z^2 slash 2) d z = frac(1, sqrt(2pi)) integral_(-infinity)^(infinity) exp lr((-frac(z^2(1-2t), 2))) d z.
+$
 
 The integrand is proportional to a Gaussian with variance $(1-2t)^(-1)$, so the integral evaluates to $sqrt(2pi \/ (1-2t))$, giving
 
@@ -141,7 +143,9 @@ $ M_Q(t) = product_(i=1)^k M_(Z_i^2)(t) = (1-2t)^(-k/2), quad t < 1/2. $
 
 *Step 3: Identification.*  A Gamma distribution with shape $alpha$ and rate $beta$ has MGF $(1 - t/beta)^(-alpha)$.  Setting $alpha = k/2$ and $beta = 1/2$ yields $(1-2t)^(-k/2)$, which matches $M_Q$ exactly.  Since the MGF uniquely determines the distribution (on an open neighbourhood of $t=0$), $Q$ follows a $"Gamma"(k/2, 1/2)$ distribution with PDF
 
-$ f(q; k) = frac((1/2)^(k/2), Gamma(k/2)) q^(k/2-1) e^(-q/2) = frac(q^(k/2-1) e^(-q/2), 2^(k/2) Gamma(k/2)), quad q > 0. $
+$
+  f(q; k) = frac((1/2)^(k/2), Gamma(k/2)) q^(k/2-1) e^(-q/2) = frac(q^(k/2-1) e^(-q/2), 2^(k/2) Gamma(k/2)), quad q > 0.
+$
 
 A further corollary of the MGF is the *additive property*: independent $chi^2(k_1)$ and $chi^2(k_2)$ variables sum to a $chi^2(k_1+k_2)$ variable, since their MGFs multiply as $(1-2t)^(-(k_1+k_2)/2)$.  The distribution has mean $k$ and variance $2k$; it is right-skewed for small $k$ and approaches normality as $k arrow.r infinity$.
 
@@ -159,12 +163,16 @@ $ f_(T|V)(t | v) = sqrt(frac(v, 2pi nu)) exp lr((-frac(t^2 v, 2nu))). $
 
 *Marginal PDF.*  Multiplying by the $chi^2(nu)$ density $f_V(v) = v^(nu/2-1) e^(-v/2) \/ (2^(nu/2) Gamma(nu/2))$ and integrating,
 
-$ f_T(t) &= integral_0^infinity f_(T|V)(t|v) f_V(v) d v \
-  &= frac(1, sqrt(2pi nu) dot 2^(nu/2) Gamma(nu/2)) integral_0^infinity v^((nu+1)/2 - 1) exp lr((-frac(v, 2) lr((1 + frac(t^2, nu))))) d v. $
+$
+  f_T(t) &= integral_0^infinity f_(T|V)(t|v) f_V(v) d v \
+  &= frac(1, sqrt(2pi nu) dot 2^(nu/2) Gamma(nu/2)) integral_0^infinity v^((nu+1)/2 - 1) exp lr((-frac(v, 2) lr((1 + frac(t^2, nu))))) d v.
+$
 
 *Evaluating the integral.*  Substitute $u = frac(v, 2)(1 + t^2 \/ nu)$, i.e. $v = 2u \/ (1 + t^2 \/ nu)$, $d v = 2 \/ (1 + t^2 \/ nu) d u$:
 
-$ integral_0^infinity v^((nu+1)/2-1) e^(-frac(v,2)(1+t^2/nu)) d v = frac(2^((nu+1)/2), (1+t^2/nu)^((nu+1)/2)) integral_0^infinity u^((nu+1)/2-1) e^(-u) d u = frac(2^((nu+1)/2) Gamma((nu+1)/2), (1+t^2/nu)^((nu+1)/2)). $
+$
+  integral_0^infinity v^((nu+1)/2-1) e^(-frac(v, 2)(1+t^2/nu)) d v = frac(2^((nu+1)/2), (1+t^2/nu)^((nu+1)/2)) integral_0^infinity u^((nu+1)/2-1) e^(-u) d u = frac(2^((nu+1)/2) Gamma((nu+1)/2), (1+t^2/nu)^((nu+1)/2)).
+$
 
 *Assembling the result.*  Substituting back, the factors $sqrt(2pi nu) dot 2^(nu/2) = sqrt(2) dot sqrt(pi nu) dot 2^(nu/2) = 2^((nu+1)/2) sqrt(pi nu)$ cancel the power of 2 in the numerator:
 
@@ -176,7 +184,7 @@ The distribution is symmetric about zero, heavier-tailed than the normal (the ta
 
 Assume $X_1, dots, X_n tilde.op^("i.i.d.") cal(N)(mu, sigma^2)$.  Define the sample mean and unbiased sample variance in the usual way:
 
-$ bar(X) = frac(1,n) sum_(i=1)^n X_i, quad S^2 = frac(1, n-1) sum_(i=1)^n (X_i - bar(X))^2. $
+$ bar(X) = frac(1, n) sum_(i=1)^n X_i, quad S^2 = frac(1, n-1) sum_(i=1)^n (X_i - bar(X))^2. $
 
 *Distribution of $(n-1)S^2/sigma^2$.*  Each standardised deviation $(X_i - mu)/sigma$ is $cal(N)(0,1)$, so $sum_i (X_i - mu)^2 / sigma^2 tilde.op chi^2(n)$.  The algebraic identity
 
@@ -247,65 +255,80 @@ $ "CI"_sigma = [sqrt(87.75),, sqrt(278.71)] = [9.37,, 16.69] $
 
 === Setup and Notation
 
-Let $cal(M)_0 = {1, dots, m_0}$ be a set of candidate models evaluated on observations $t = 1, dots, T$.  Each model $i$ incurs a scalar loss $L_(i,t)$ (e.g.\ squared error) at time $t$.  The *loss differential* between models $i$ and $j$ is
+Let $cal(M)_0 = {1, dots, m_0}$ be a finite set of candidate models evaluated over $n$ periods.  Each model $i$ incurs a scalar loss $L_(i,t)$ at period $t$.  The *loss differential* is
 
-$ d_(i j, t) = L_(i,t) - L_(j,t). $
+$ d_(i j, t) = L_(i,t) - L_(j,t), $
 
-We say model $i$ is *superior to* model $j$ if $bb(E)[d_(i j, t)] < 0$, i.e.\ it has strictly lower expected loss.
+and $mu_(i j) equiv bb(E)[d_(i j, t)]$ is assumed finite and time-invariant.  Model $i$ is preferred over $j$ when $mu_(i j) < 0$.
 
-=== Equal Predictive Ability (EPA) Hypothesis
+> *Definition 1 (Superior set).*  $cal(M)^* equiv {i in cal(M)_0 : mu_(i j) <= 0 "for all" j in cal(M)_0}$.
 
-The null hypothesis of *Equal Predictive Ability* over a set $cal(M)$ is
+The MCS procedure aims to identify $cal(M)^*$ by testing, at each step, the null of *equal predictive ability* (EPA) over the current active set $cal(M)$:
 
-$ H_(0, cal(M)) : bb(E)[d_(i j, t)] = 0 quad forall i, j in cal(M). $
+$ H_(0, cal(M)) : mu_(i j) = 0 quad forall i, j in cal(M). $
 
-Hansen, Lunde & Nason (2011) use a sequence of EPA tests to build the MCS: at each step the set $cal(M)$ is tested; if $H_0$ is rejected, the model with the worst relative performance is removed.  Removal continues until the remaining models cannot be statistically distinguished.
+=== The MCS Algorithm
+
+The procedure requires an equivalence test $delta_cal(M)$ and an elimination rule $e_cal(M)$ @hansen2011:
+
++ Set $cal(M) = cal(M)_0$.
++ Test $H_(0, cal(M))$ using $delta_cal(M)$ at level $alpha$.
++ If accepted, set $hat(cal(M))^*_(1-alpha) = cal(M)$ and stop.
++ Otherwise apply $e_cal(M)$ to remove one object and return to step 2.
 
 === Test Statistics
 
-Two test statistics are proposed @hansen2011:
+Two statistics can serve as $delta_cal(M)$ @hansen2011.  Writing $bar(d)_(i dot) = m^(-1) sum_(j in cal(M)) bar(d)_(i j)$ for the average relative loss of model $i$, the *t-statistics*
 
-- *Range statistic* $T_R$: based on the maximum standardised average loss differential across all pairs,
-  $ T_R = max_(i,j in cal(M)) frac(bar(d)_(i j), sqrt(hat("Var")(bar(d)_(i j)))). $
+$ t_(i dot) = bar(d)_(i dot) \/ sqrt(hat("var")(bar(d)_(i dot))) $
 
-- *Semi-quadratic statistic* $T_(S Q)$: sum of standardised squared mean differentials per model,
-  $ T_(S Q) = sum_(i in cal(M)) frac(bar(d)_(i dot)^2, hat("Var")(bar(d)_(i dot))), $
-  where $bar(d)_(i dot) = (m)^(-1) sum_(j in cal(M)) bar(d)_(i j)$ is the average loss differential of model $i$ against all others.
+lead to two tests:
 
-P-values are obtained via the *stationary bootstrap* @politis1994, which resamples blocks of consecutive observations to respect temporal dependence.
+- *$T_"max"$ (semi-quadratic):* $T_"max" = max_(i in cal(M)) t_(i dot)$, with elimination rule $e_"max" = arg max_i t_(i dot)$.
+- *$T_R$ (range):* $T_R = max_(i,j in cal(M)) |t_(i j)|$, with $e_R = arg max_i sup_j t_(i j)$.
 
-=== Model Elimination Rule
-
-Given a significance level $alpha$, the model eliminated at each step is
-
-$ e^* (cal(M)) = arg max_(i in cal(M)) bar(d)_(i dot) / sqrt(hat("Var")(bar(d)_(i dot))). $
-
-The procedure terminates when $H_(0, cal(M))$ cannot be rejected, yielding the *Model Confidence Set* $hat(cal(M))^*_alpha$.
+Critical values are obtained via the *stationary bootstrap*, which resamples blocks of consecutive observations to preserve temporal dependence @politis1994.
 
 === Key Theorems
 
-*Theorem 1 (Consistency)* @hansen2011.  Under standard regularity conditions (stationarity, weak dependence, finite fourth moments):
+The following results hold under Assumption 1 of @hansen2011 (asymptotic level control, consistency, and coherency between test and elimination rule).
 
-$ lim_(T arrow.r infinity) P(cal(M)^* subset.eq hat(cal(M))^*_alpha) >= 1 - alpha, $
+*Theorem 1 (MCS coverage and elimination consistency)* @hansen2011.
 
-where $cal(M)^* = {i in cal(M)_0 : bb(E)[d_(i j, t)] <= 0 quad forall j in cal(M)_0}$ is the true superior set.  That is, the MCS contains the best model(s) with probability at least $1-alpha$ in large samples.
+(i) $liminf_(n -> infinity) P(cal(M)^* subset.eq hat(cal(M))^*_(1-alpha)) >= 1 - alpha$.
 
-*Theorem 2 (Elimination consistency)* @hansen2011.  Models that are strictly inferior (positive expected loss differential against $cal(M)^*$) are excluded from $hat(cal(M))^*_alpha$ with probability approaching one as $T arrow.r infinity$.
+(ii) $lim_(n -> infinity) P(i in hat(cal(M))^*_(1-alpha)) = 0$ for every $i in.not cal(M)^*$.
+
+Part (i) is the analogue of a confidence interval covering the true parameter: the MCS contains every best model with probability at least $1 - alpha$.  Part (ii) says inferior models are asymptotically excluded with probability one.
+
+*Corollary 1 (Singleton)* @hansen2011.  When $cal(M)^* = {i^*}$ is a singleton,
+
+$ lim_(n -> infinity) P(cal(M)^* = hat(cal(M))^*_(1-alpha)) = 1. $
+
+That is, with sufficient data, the MCS collapses exactly to the single best model.
+
+*Theorem 2 (Finite-sample coherency)* @hansen2011.  If $P(delta_cal(M) = 1, e_cal(M) in cal(M)^*) <= alpha$, then $P(cal(M)^* subset.eq hat(cal(M))^*_(1-alpha)) >= 1 - alpha$ holds *exactly*, not just asymptotically.  The tests $T_"max"$ and $T_R$ paired with their natural elimination rules satisfy this coherency condition (Proposition 1 of @hansen2011).
+
+*Theorem 3 (MCS p-values)* @hansen2011.  Let $hat(p)_(e_(cal(M)_j))$ denote the MCS p-value of the $j$-th eliminated model, defined as the running maximum of the sequence of per-step p-values:
+
+$ hat(p)_(e_(cal(M)_j)) = max_(k <= j) P_(H_(0, cal(M)_k)). $
+
+Then $i in hat(cal(M))^*_(1-alpha)$ if and only if $hat(p)_i >= alpha$.  The running-maximum construction ensures monotonicity: a model cannot have a smaller p-value than the one eliminated just before it, preventing the sequential procedure from accumulating spurious rejections.
 
 === Interpreting MCS Results
 
-The MCS p-value $p_i$ reported for each model has the following interpretation:
+The MCS p-value $hat(p)_i$ reported for each model satisfies (by Theorem 3):
 
-- $p_i >= alpha$: model $i$ *belongs to* the MCS at level $alpha$; it cannot be statistically distinguished from the best.
-- $p_i < alpha$: model $i$ is *excluded* from the MCS; its inferiority relative to the best model is statistically significant.
-- A p-value of exactly 1 means the model was *never eliminated* during the sequential procedure.
-- The conventional choice is $alpha = 10%$: all models with $p_i >= 0.10$ form the MCS.
+- $hat(p)_i >= alpha$: model $i$ *belongs to* the MCS at level $alpha$, i.e. it cannot be statistically distinguished from the best model(s).
+- $hat(p)_i < alpha$: model $i$ is *excluded*, i.e. its inferiority is statistically significant at level $alpha$.
+- $hat(p)_i = 1$: the model was *never eliminated*; the EPA test was accepted while it was still in the active set.
+- The conventional choice is $alpha = 10%$: all models with $hat(p)_i >= 0.10$ form the MCS.
 
-The MCS does *not* guarantee that the included model is the global optimum—it only guarantees that no sufficient statistical evidence exists to call it inferior.
+The MCS p-value is *not* the probability that a model is optimal — just as a classical p-value is not the probability that $H_0$ is true.  It reflects the random nature of $hat(cal(M))^*$: the set contains $cal(M)^*$ with probability $>= 1 - alpha$, not with certainty.  Less informative data leads to a wider MCS (many models survive); more informative data compresses it toward the single best model (Corollary 1).
 
 == Where MCS Shines: Identifying a Clear Winner
 
-We generated synthetic data from a quadratic relationship $y = x^2 + epsilon$ ($epsilon tilde cal(N)(0, 1.5^2)$, $x in [-4, 4]$) with $n_"train" = n_"test" = 200$.  Four models were trained on the training set and evaluated on the held-out test set using squared errors per observation:
+We generated synthetic data from a quadratic relationship $y = x^2 + epsilon$ ($epsilon tilde cal(N)(0, 1.5^2)$, $x in [-4, 4]$) with $n_"train" = n_"test" = 200$.  Four polynomial models were trained on the training set and evaluated on the held-out test set using squared errors per observation:
 
 #figure(
   image("figures/problem3_mcs_shines.svg", width: 92%),
@@ -318,47 +341,83 @@ We generated synthetic data from a quadratic relationship $y = x^2 + epsilon$ ($
 
 @mcs_shines confirms that when there is a structurally best model, MCS correctly identifies it:
 
-- *Quadratic* (the true model) achieves the lowest RMSE and is included in the MCS.
-- *Cubic* is sometimes also included because the extra degree of freedom does not significantly increase variance on 200 test points.
-- *Linear* is correctly excluded: its systematic bias (underfitting) is large enough for the EPA test to reject it.
-- *Degree 8* is excluded due to overfitting: its higher test variance makes it statistically worse than the quadratic.
+- *Quadratic* (the true model) achieves the lowest RMSE and is included in the MCS ($hat(p) >= 0.10$).
+- *Cubic* may also be included: the extra degree of freedom does not significantly worsen prediction on 200 test points, so the EPA test cannot reject equality with the quadratic.
+- *Linear* is correctly excluded ($hat(p) < 0.10$): its systematic bias (underfitting) is large enough for the EPA test to detect.
+- *Degree 8* is excluded: overfitting inflates its test-set variance, making it statistically inferior to the quadratic.
+
+This is Corollary 1 in action: when the true model is structurally distinct, and we have enough data, the MCS converges to that single best model.
+
+== Multi-Model Comparison: Hypothesis Testing with MCS
+
+We evaluate four candidate estimators — Least Squares (LS), RANSAC, LightGBM (LGBM), and RANSAC+LightGBM (R+LGBM) — on nine synthetic datasets: three functional forms ($y=x$, $y=x^2$, $y=e^x$) each at three outlier contamination levels (0%, $approx$20%, $approx$50%).  For each dataset, the MCS is computed from squared-error losses at $alpha=10%$.  Each figure below shows, per outlier level: *(left)* the data with all four fitted curves (solid = included in MCS, dashed = excluded), and *(right)* the corresponding MCS p-value bar chart with the $alpha=0.10$ threshold line.
+
+*Reading the tables.*  Within each row, values are colour-coded relative to each other (green = best, red = worst).  For MCS p-values the direction is reversed: green means $hat(p) >= 0.10$ (included), red means $hat(p) < 0.10$ (excluded).
+
+=== Linear Relationship
+
+#figure(
+  image("figures/problem3_comparison_linear.svg", width: 100%),
+  caption: [
+    MCS comparison for linear data ($y = x$).  Each row is one outlier level.
+    Left: data with fitted curves (solid = in MCS, dashed = excluded).
+    Right: MCS p-values; dashed line marks $alpha = 0.10$.
+  ],
+) <mcs_linear_fig>
+
+#include "generated/mcs_table_linear.typ"
+
+On clean linear data, LS and RANSAC are statistically equivalent (both $hat(p) = 1$) and dominate.  As outliers increase, LightGBM gains an apparent advantage: its flexibility lets it partially fit the contaminated observations, lowering its MSE while LS and RANSAC are penalised.  At 50% contamination, LS is typically excluded ($hat(p) < 0.10$) while LGBM retains its p-value.
+
+=== Quadratic Relationship
+
+#figure(
+  image("figures/problem3_comparison_quadratic.svg", width: 100%),
+  caption: [
+    MCS comparison for quadratic data ($y = x^2$).  Layout as in @mcs_linear_fig.
+  ],
+) <mcs_quadratic_fig>
+
+#include "generated/mcs_table_quadratic.typ"
+
+On clean quadratic data, LS (quadratic) and RANSAC are both in the MCS; R+LGBM may also enter because LightGBM can capture the curvature.  Outliers progressively shift the MCS toward LightGBM-based methods, consistent with the pattern observed for linear data.
+
+=== Exponential Relationship
+
+#figure(
+  image("figures/problem3_comparison_exponential.svg", width: 100%),
+  caption: [
+    MCS comparison for exponential data ($y = e^x$).  Layout as in @mcs_linear_fig.
+  ],
+) <mcs_exponential_fig>
+
+#include "generated/mcs_table_exponential.typ"
+
+On clean exponential data, R+LGBM typically dominates because LGBM captures the non-linear shape while RANSAC discards any anomalous points.  LS (log-space linear model) and RANSAC on the log-transformed data are competitive but show higher RMSE when the exponential curvature is steep.
+
+*Cross-cutting inference remark.*  In all three settings, the p-value bars make the hypothesis testing explicit: a bar above the $alpha = 0.10$ line means the EPA null $H_(0, cal(M))$ was *not* rejected while that model was still active — by Theorem 3, the model belongs to the 90% MCS.  A bar below the line means the model was eliminated when the EPA test rejected equality, and the running-maximum construction ensures monotonic p-values (Theorem 3).
 
 == Where MCS Fails: Outlier Contamination
 
-A critical assumption of the MCS framework is that the *loss function reflects the true comparison of interest*.  When outliers are present, squared-error loss is dominated by a few extreme residuals that are unrelated to model quality, and the bootstrap resampling propagates those outliers, distorting the EPA test statistics.
-
-@mcs_fails_ref shows the MCS analysis from Hansen, Lunde and Nason's type of setup applied to linear data contaminated with circular outliers—reproduced here from prior analysis @hansen2011.
-
-#figure(
-  image("references/or_mcs/helpers/demo_results_linear.svg", width: 97%),
-  caption: [
-    MCS applied to contaminated linear data.  Each row shows a different level of outlier
-    contamination (none, some, many).  Columns show Least Squares (LS), RANSAC, LightGBM,
-    and RANSAC+LightGBM.  Even at moderate contamination, LS and RANSAC are penalised by
-    outlier-driven MSE, while more flexible methods (LightGBM) appear to "win" despite the
-    true relationship being linear.
-  ],
-) <mcs_fails_ref>
-
-@mcs_fails shows our simplified reproduction of the failure case with three models (Linear LS, Quadratic LS, Degree 6 polynomial):
+The comparison table already hints at a failure mode: on linearly-generated data with many outliers, LightGBM "wins" according to MSE even though the true relationship is $y = x$, which a simple linear model handles perfectly.  To isolate this failure, @mcs_fails reproduces a controlled version with three models (Linear LS, Quadratic LS, Degree 6 polynomial) on $n = 120$ points ($n_"in"=100$ inliers on $y=x$, $n_"out"=20$ circular outliers):
 
 #figure(
   image("figures/problem3_mcs_fails.svg", width: 97%),
   caption: [
     MCS failure on linear data with circular outliers.  Left: fitted models with true inlier
     relationship $y = x$ (black dashed).  Middle: RMSE and MCS p-values on the full
-    contaminated dataset—flexible models appear optimal.  Right: the same on clean inliers
-    only—Linear LS correctly wins.
+    contaminated dataset — flexible models appear optimal.  Right: the same on clean inliers
+    only — Linear LS correctly wins.
   ],
 ) <mcs_fails>
 
-*Why does MCS fail here?*  There are three compounding reasons:
+*Why does MCS fail here?*  Three compounding reasons:
 
-+ *Non-robust loss.* MSE assigns equal weight to all residuals.  A circular outlier at distance $r$ from the true line contributes $r^2 approx 9$–$36$ to the loss, dwarfing inlier residuals (which are $approx 0.25$).  Flexible models can partially interpolate the outlier cluster, reducing their apparent MSE.
-+ *Bootstrap contamination.* The stationary bootstrap resamples the full dataset; with probability proportional to the outlier fraction, resampled batches contain disproportionately many outliers, biasing the variance estimate of $bar(d)_(i j)$ and shrinking effective test power against the flexible model.
-+ *Breakdown point of zero.* The standard MCS has no robustness guarantee against outliers.  Its asymptotic validity (Theorem 1) requires the *same* distribution across bootstrap replications; outliers violate this assumption in practice.
++ *Non-robust loss.* MSE assigns equal weight to all residuals.  A circular outlier at distance $r$ from the true line contributes $r^2 approx 9$–$36$ to the loss, dwarfing inlier residuals ($approx 0.25$).  Flexible models partially interpolate the outlier cluster, lowering their apparent MSE.
++ *Bootstrap contamination.* The stationary bootstrap resamples the full dataset; resampled batches contain outliers in proportion to their frequency, biasing the variance estimate $hat("var")(bar(d)_(i j))$ and distorting the EPA test statistics.
++ *Breakdown point of zero.* The standard MCS has no robustness guarantee: Theorem 1 assumes the same stationary distribution holds throughout, but outliers create a mixture that violates this in practice.
 
-When evaluated on clean inliers only (right panel of @mcs_fails), MCS correctly recovers Linear LS as the sole member of the confidence set.  This motivates the research direction of *outlier-robust* model confidence sets.
+When evaluated on clean inliers only (right panel of @mcs_fails), MCS correctly recovers Linear LS as the sole member of the confidence set — confirming that the procedure itself is sound, but the loss function is not.  This motivates the research direction of *outlier-robust* model confidence sets.
 
 // ============================================================
 = Conclusion
@@ -370,7 +429,7 @@ This work covered three interconnected topics in computational statistics.
 
 *Problem 2* applied the CLT and exact sampling theory (t and chi-squared distributions) to construct 95% confidence intervals for the mean and standard deviation of cholesterol levels.  The coverage property was confirmed by simulation: approximately 5% of intervals miss the true mean, matching the nominal $alpha = 5%$.
 
-*Problem 3* introduced the Model Confidence Set of Hansen, Lunde and Nason (2011), a principled procedure to identify the best-performing model(s) from a candidate set while controlling the probability of excluding the true optimum.  When the data are clean and one model is structurally superior, MCS reliably identifies it.  When outliers are present and squared-error loss is used, MCS can fail: outlier residuals dominate the loss, the bootstrap propagates contamination, and flexible models appear falsely superior.  The remedy is an outlier-robust loss function or a fundamentally different resampling strategy.
+*Problem 3* introduced the Model Confidence Set of Hansen, Lunde and Nason (2011), a principled sequential hypothesis testing procedure governed by three key theorems.  Theorem 1 guarantees that the MCS contains the true best model(s) with probability $>= 1 - alpha$ asymptotically, and eliminates all inferior models with probability tending to one.  Theorem 3 provides p-values that characterise inclusion: model $i$ belongs to the 90% MCS if and only if $hat(p)_i >= 0.10$.  A multi-model comparison across nine datasets (three functional forms × three outlier levels) showed that LightGBM consistently achieves high MCS p-values under contamination, while simpler methods are excluded as outliers increase.  However, when the loss function is non-robust (MSE), the procedure fails on contaminated data: outlier residuals dominate, flexible models appear falsely superior, and the true linear model is excluded.  On clean data, MCS correctly recovers the true model.  The remedy is a robust loss function or an outlier-aware resampling strategy.
 
 // ============================================================
 = References
