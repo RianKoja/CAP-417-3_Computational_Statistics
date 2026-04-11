@@ -41,7 +41,7 @@
 The *CongNaMul* dataset #cite(<ban2023congnamul>) documents soybean sprout cultivation for smart-agriculture research. Researchers photographed *#res.data.n_total individual sprouts* against three backgrounds (clear, green checkered, white checkered) and measured five physical attributes: *head length*, *body length*, *body thickness*, *tail length* (mm) and *weight* (mg). Since each individual appears in all three backgrounds with identical measurements, deduplication yields *#res.data.n_total unique sprouts*. Two records with clear measurement errors (body length of 9 129 mm; body thickness of 20.9 mm — both beyond the 3 × IQR fence) are removed, leaving *n = #res.data.n_total*. Weight data are available for *#res.data.n_weight sprouts*; the remaining #res.data.n_missing are coded −1 (missing).
 
 #figure(
-  image("figs/fig0_dataset_overview.jpg", width: 95%),
+  image("figs/fig0_dataset_overview.jpg", width: 75%),
   caption: [
     Visual overview of the CongNaMul dataset showing: (a) background types, (b) single sprout
     images for segmentation and measurement, and (c) multiple sprout images for density studies.
@@ -70,7 +70,7 @@ The *CongNaMul* dataset #cite(<ban2023congnamul>) documents soybean sprout culti
 
 = Normality Testing
 
-Two complementary tests were applied to each feature (@tbl-norm). *Shapiro–Wilk* (S-W) is powerful for small-to-moderate samples and sensitive to tail departures. *Kolmogorov–Smirnov* (K-S) measures the maximum CDF distance; with parameters estimated from the same data it becomes conservative. S-W rejects normality for body length and tail length (both p < 0.05), consistent with their skewness in @tbl-desc. K-S fails to reject any feature (minimum p = #res.normality.ks_min_p), illustrating its lower power when parameters are estimated.
+Two complementary tests (@tbl-norm) were applied to all five features. *Shapiro–Wilk* (S-W) is powerful for small-to-moderate samples; *Kolmogorov–Smirnov* (K-S) is conservative when parameters are estimated from data. S-W rejects normality for body length and tail length (p < 0.05); weight is borderline (S-W p = #res.normality.weight_sw_p). K-S fails to reject any feature (min p = #res.normality.ks_min_p), illustrating its lower power.
 
 #figure(
   include "outputs/tbl_norm.typ",
@@ -92,18 +92,28 @@ Two complementary tests were applied to each feature (@tbl-norm). *Shapiro–Wil
 
 = Correlation and Regression
 
-== Pairwise Correlations
+Weight is right-skewed with heavier tails than Normal (@fig-weight). The strongest predictors of weight are body thickness (r = #res.correlations.thickness_r) and head length (r = #res.correlations.head_r, both p #res.correlations.head_p); body length is moderate (r = #res.correlations.body_r); tail length is negligible (r = #res.correlations.tail_r, p = #res.correlations.tail_p) — see @fig-corr.
 
-@fig-corr shows Pearson correlations for the #res.data.n_weight weight-complete sprouts. The strongest predictors of *weight* are body thickness (r = #res.correlations.thickness_r) and head length (r = #res.correlations.head_r), both p #res.correlations.head_p. Body length is moderately correlated (r = #res.correlations.body_r, p #res.correlations.body_p). Tail length shows no significant linear relationship (r = #res.correlations.tail_r, p = #res.correlations.tail_p).
-
-#figure(
-  image("figs/fig3_correlation.svg", width: 55%),
-  caption: [Pearson correlation heatmap (*n* = #res.data.n_weight).],
-) <fig-corr>
+#grid(
+  columns: (1fr, 1fr),
+  gutter: 0.8em,
+  [
+    #figure(
+      image("figs/fig5_weight_dist.svg"),
+      caption: [Weight distribution (*n* = #res.data.n_weight): right-skewed, non-Normal.],
+    ) <fig-weight>
+  ],
+  [
+    #figure(
+      image("figs/fig3_correlation.svg"),
+      caption: [Pearson correlation heatmap (*n* = #res.data.n_weight).],
+    ) <fig-corr>
+  ],
+)
 
 == OLS vs RANSAC Regression
 
-Both an ordinary least-squares (OLS) model and a RANSAC (Random Sample Consensus) model were fitted to predict weight from all four morphological features. RANSAC iteratively identifies an inlier consensus set that minimises residuals, making it robust to atypical observations. The automatic residual threshold (median absolute deviation) classified *#res.regression.n_inliers sprouts as inliers* and *#res.regression.n_outliers as outliers*.
+OLS and RANSAC were fitted to predict weight from all four features. RANSAC's automatic threshold (median absolute deviation) classified *#res.regression.n_inliers inliers* and *#res.regression.n_outliers outliers*.
 
 #figure(
   include "outputs/tbl_models.typ",
@@ -123,10 +133,10 @@ Both an ordinary least-squares (OLS) model and a RANSAC (Random Sample Consensus
   ],
 ) <fig-ransac>
 
-Both models agree on the sign and rough magnitude of all coefficients. RANSAC achieves R² = #res.regression.r2_ransac_inliers on its inlier set by discarding the #res.regression.n_outliers atypical observations, while OLS uses all data and obtains R² = #res.regression.r2_ols. The similar coefficient estimates confirm that OLS is not severely distorted by the outliers, but RANSAC reveals a tighter underlying relationship among the majority of sprouts. Tail length remains non-significant under OLS and negligibly small under RANSAC, confirming it adds no predictive value.
+Both models agree on coefficient signs and magnitudes. OLS R² = #res.regression.r2_ols; RANSAC R² = #res.regression.r2_ransac_inliers on inliers. Tail length is non-significant in both, confirming it adds no predictive value.
 
 = Conclusions
 
-Three morphological dimensions — head length, body length, and body thickness — jointly predict soybean sprout weight with R² = #res.regression.r2_ols (OLS) and R² = #res.regression.r2_ransac_inliers among the inlier consensus set (RANSAC). Tail length contributes no predictive information. Head length is the only feature whose distribution is well approximated by a Normal; body length and tail length display mild right skew detected by the more powerful Shapiro–Wilk test but missed by Kolmogorov–Smirnov, highlighting the importance of choosing an appropriate normality test for moderate sample sizes.
+Head length, body length, and body thickness jointly predict weight (R² = #res.regression.r2_ols OLS; R² = #res.regression.r2_ransac_inliers RANSAC inliers); tail length adds nothing. Head length is the most Normal feature; body length and tail length show right skew flagged by Shapiro–Wilk. Weight is borderline non-Normal (S-W p = #res.normality.weight_sw_p), missed by the less powerful K-S test.
 
 #bibliography("references/congnamul.bib", title: "References", style: "ieee")

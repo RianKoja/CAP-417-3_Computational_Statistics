@@ -5,6 +5,8 @@ n_missing = 45
 
 [normality]
 ks_min_p = "0.227"
+weight_sw_p = "0.053"
+weight_ks_p = "0.713"
 
 [correlations]
 head_r = "0.62"

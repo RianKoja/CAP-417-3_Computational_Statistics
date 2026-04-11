@@ -1,15 +1,28 @@
-# Final assingment for Leonardo Santos's part of the Computational Statistics course
+# Assignment 04 — Soybean Sprout Growth Analysis
 
-## Open assignment: Using my own dataset
+Graduate course "Estatística Computacional" at INPE/CAP. Author: Rian Koja.
 
-I'll present the 'or_mcs' pitch for my phd thesis, available at: https://github.com/RianKoja/phd_pitches
+## Dataset
 
-## Semi-open assignment: crop growth modeling
+**CongNaMul** soybean sprout dataset (Kaggle: `byunghyunban/congnamul`).  
+Download with `make download` — lands in `~/.cache/kagglehub/datasets/byunghyunban/congnamul/versions/1`.
 
-I haven't done the beans growing myself, so I'll use the CognaMul dataset, available at: https://www.kaggle.com/datasets/byunghyunban/congnamul
+Five physical measurements per sprout: head length, body length, body thickness, tail length (mm), weight (mg).  
+Each sprout appears 3× (different backgrounds); the script deduplicates by sample ID.  
+Weight is missing (coded −1) for ~45 of 203 sprouts after outlier removal.
 
-the data has been downloaded using the `make download` command. It can be found at `~/.cache/kagglehub/datasets/byunghyunban/congnamul/versions/1`.
+## Build
 
-Figures are no interesting, I'll only use feature data, particularly the "length_body"
+```
+make download   # one-time data fetch
+make run        # run analysis.py then compile report.typ → report.pdf
+make clean      # delete generated SVGs
+```
 
-The end report must have at most 4 pages, and perform statistical analysis, including descriptive analysis and hypothesis testing.
+Requires `uv` (Python env) and `typst` on PATH.
+
+## Constraints
+
+- Report must be **≤ 4 pages** (A4, current margins).
+- No hardcoded values in `report.typ` — all numbers come from `outputs/`.
+- Only feature data is used; image/segmentation data is ignored.

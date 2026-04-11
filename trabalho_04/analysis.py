@@ -44,6 +44,7 @@ SHORT_LABELS = {
     "length_body":    "Body length",
     "thickness_body": "Body thickness",
     "length_tail":    "Tail length",
+    "weight":         "Weight",
 }
 
 
@@ -163,6 +164,24 @@ def fig_qqplots(df: pd.DataFrame) -> None:
     plt.close(fig)
 
 
+def fig_weight_distribution(df_w: pd.DataFrame) -> None:
+    x = df_w["weight"].dropna()
+    fig, ax = plt.subplots(figsize=(5.5, 3.5))
+    ax.hist(x, bins=25, density=True, alpha=0.5, color="#4878CF", edgecolor="white", linewidth=0.4)
+    kde_x = np.linspace(x.min(), x.max(), 300)
+    ax.plot(kde_x, stats.gaussian_kde(x)(kde_x), color="#4878CF", lw=2, label="KDE")
+    mu, sigma = x.mean(), x.std()
+    ax.plot(kde_x, stats.norm.pdf(kde_x, mu, sigma), "k--", lw=1.2,
+            label=f"N({mu:.3f}, {sigma:.3f}²)")
+    ax.set_xlabel(LABELS["weight"], fontsize=9)
+    ax.set_ylabel("Density", fontsize=9)
+    ax.legend(fontsize=8, frameon=False)
+    ax.set_title(f"Weight Distribution (n = {len(df_w)})", fontsize=10)
+    fig.tight_layout()
+    fig.savefig(FIGS_DIR / "fig5_weight_dist.svg", bbox_inches="tight")
+    plt.close(fig)
+
+
 def fig_correlation(df_w: pd.DataFrame) -> None:
     cols = FEATURES + ["weight"]
     sub = df_w[cols].rename(columns=LABELS)
@@ -273,28 +292,31 @@ def compute_stats(df: pd.DataFrame, df_w: pd.DataFrame, ransac_results: dict) ->
     desc_df = pd.DataFrame(desc_rows).set_index("Feature")
 
     # Normality tests table
+    norm_feats = FEATURES + ["weight"]
     norm_raw = []
-    for feat in FEATURES:
-        x = df[feat].dropna().values
+    for feat in norm_feats:
+        x = (df[feat] if feat in FEATURES else df_w[feat]).dropna().values
         sw_stat, sw_p = stats.shapiro(x)
         ks_stat, ks_p = stats.kstest(x, "norm", args=(x.mean(), x.std(ddof=1)))
         norm_raw.append({
+            "feat": feat,
             "sw_stat": sw_stat, "sw_p": sw_p,
             "ks_stat": ks_stat, "ks_p": ks_p,
         })
 
     norm_df = pd.DataFrame([
         {
-            "Feature": SHORT_LABELS[feat],
+            "Feature": SHORT_LABELS[r["feat"]],
             "S-W W": f"{r['sw_stat']:.4f}",
             "S-W p": fmt_p(r["sw_p"]),
             "K-S D": f"{r['ks_stat']:.4f}",
             "K-S p": fmt_p(r["ks_p"]),
         }
-        for feat, r in zip(FEATURES, norm_raw)
+        for r in norm_raw
     ]).set_index("Feature")
 
     ks_min_p = min(r["ks_p"] for r in norm_raw)
+    weight_norm = norm_raw[-1]
 
     # Pearson correlations with weight
     corr = {}
@@ -331,6 +353,7 @@ def compute_stats(df: pd.DataFrame, df_w: pd.DataFrame, ransac_results: dict) ->
         "desc_df": desc_df,
         "norm_df": norm_df,
         "ks_min_p": ks_min_p,
+        "weight_norm": weight_norm,
         "corr": corr,
         "model_df": model_df,
         "r2_ols": ols_model.rsquared,
@@ -352,6 +375,8 @@ def save_outputs(s: dict) -> None:
         },
         "normality": {
             "ks_min_p": f"{s['ks_min_p']:.3f}",
+            "weight_sw_p": fmt_p(s["weight_norm"]["sw_p"]).replace("*", ""),
+            "weight_ks_p": fmt_p(s["weight_norm"]["ks_p"]).replace("*", ""),
         },
         "correlations": {
             "head_r": f"{corr['length_head']['r']:.2f}",
@@ -390,6 +415,7 @@ def main():
     print("[2/4] Generating figures...")
     fig_distributions(df)
     fig_qqplots(df)
+    fig_weight_distribution(df_w)
     fig_correlation(df_w)
     ransac_results = fig_ransac(df_w)
 
