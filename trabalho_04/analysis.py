@@ -15,7 +15,7 @@ import pypst
 import seaborn as sns
 from scipy import stats
 import statsmodels.api as sm
-from statsmodels.stats.diagnostic import het_breuschpagan
+from statsmodels.stats.diagnostic import het_breuschpagan, lilliefors
 from sklearn.linear_model import RANSACRegressor, LinearRegression
 
 # -- Configuration --
@@ -107,6 +107,7 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
         rows.append({"id": sid, **vals})
 
     df = pd.DataFrame(rows).sort_values("id").reset_index(drop=True)
+    n_raw = len(df)
 
     if REMOVE_OUTLIERS:
         mask = pd.Series(True, index=df.index)
@@ -117,8 +118,8 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
         df = df[mask]
 
     df = df.reset_index(drop=True)
-    df_w = df[df["weight"] != -1].copy().reset_index(drop=True)
-    return df, df_w
+    df_w = df[df["weight"] > 0].copy().reset_index(drop=True)
+    return df, df_w, n_raw
 
 
 # ── Figures ───────────────────────────────────────────────────────────────────
@@ -151,9 +152,9 @@ def fig_qqplots(df: pd.DataFrame) -> None:
         ax.scatter(osm, osr, s=12, alpha=0.6, color="#4878CF")
         ax.plot(osm, slope * np.array(osm) + intercept, "k--", lw=1.2)
         _, sw_p = stats.shapiro(x)
-        ks_stat, ks_p = stats.kstest(x, "norm", args=(x.mean(), x.std(ddof=1)))
+        lil_stat, lil_p = lilliefors(x, dist="norm")
         ax.set_title(
-            f"{LABELS[feat]}\nS-W p={sw_p:.3f}   K-S p={ks_p:.3f}",
+            f"{LABELS[feat]}\nS-W p={sw_p:.3f}   Lil. p={lil_p:.3f}",
             fontsize=8,
         )
         ax.set_xlabel("Theoretical quantiles", fontsize=8)
@@ -265,7 +266,7 @@ def fig_ransac(df_w: pd.DataFrame) -> dict:
 
 
 # ── Statistics computation ────────────────────────────────────────────────────
-def compute_stats(df: pd.DataFrame, df_w: pd.DataFrame, ransac_results: dict) -> dict:
+def compute_stats(df: pd.DataFrame, df_w: pd.DataFrame, ransac_results: dict, n_raw: int) -> dict:
     # Descriptive statistics table
     desc_rows = []
     for feat in FEATURES:
@@ -297,11 +298,11 @@ def compute_stats(df: pd.DataFrame, df_w: pd.DataFrame, ransac_results: dict) ->
     for feat in norm_feats:
         x = (df[feat] if feat in FEATURES else df_w[feat]).dropna().values
         sw_stat, sw_p = stats.shapiro(x)
-        ks_stat, ks_p = stats.kstest(x, "norm", args=(x.mean(), x.std(ddof=1)))
+        lil_stat, lil_p = lilliefors(x, dist="norm")
         norm_raw.append({
             "feat": feat,
             "sw_stat": sw_stat, "sw_p": sw_p,
-            "ks_stat": ks_stat, "ks_p": ks_p,
+            "lil_stat": lil_stat, "lil_p": lil_p,
         })
 
     norm_df = pd.DataFrame([
@@ -309,13 +310,13 @@ def compute_stats(df: pd.DataFrame, df_w: pd.DataFrame, ransac_results: dict) ->
             "Feature": SHORT_LABELS[r["feat"]],
             "S-W W": f"{r['sw_stat']:.4f}",
             "S-W p": fmt_p(r["sw_p"]),
-            "K-S D": f"{r['ks_stat']:.4f}",
-            "K-S p": fmt_p(r["ks_p"]),
+            "Lil. D": f"{r['lil_stat']:.4f}",
+            "Lil. p": fmt_p(r["lil_p"]),
         }
         for r in norm_raw
     ]).set_index("Feature")
 
-    ks_min_p = min(r["ks_p"] for r in norm_raw)
+    lil_min_p = min(r["lil_p"] for r in norm_raw)
     weight_norm = norm_raw[-1]
 
     # Pearson correlations with weight
@@ -347,12 +348,13 @@ def compute_stats(df: pd.DataFrame, df_w: pd.DataFrame, ransac_results: dict) ->
     model_df = pd.DataFrame(model_rows).set_index("Predictor")
 
     return {
+        "n_raw": n_raw,
         "n_total": len(df),
         "n_weight": len(df_w),
         "n_missing": len(df) - len(df_w),
         "desc_df": desc_df,
         "norm_df": norm_df,
-        "ks_min_p": ks_min_p,
+        "lil_min_p": lil_min_p,
         "weight_norm": weight_norm,
         "corr": corr,
         "model_df": model_df,
@@ -369,14 +371,15 @@ def save_outputs(s: dict) -> None:
     corr = s["corr"]
     toml_data = {
         "data": {
+            "n_raw": s["n_raw"],
             "n_total": s["n_total"],
             "n_weight": s["n_weight"],
             "n_missing": s["n_missing"],
         },
         "normality": {
-            "ks_min_p": f"{s['ks_min_p']:.3f}",
+            "lil_min_p": f"{s['lil_min_p']:.3f}",
             "weight_sw_p": fmt_p(s["weight_norm"]["sw_p"]).replace("*", ""),
-            "weight_ks_p": fmt_p(s["weight_norm"]["ks_p"]).replace("*", ""),
+            "weight_lil_p": fmt_p(s["weight_norm"]["lil_p"]).replace("*", ""),
         },
         "correlations": {
             "head_r": f"{corr['length_head']['r']:.2f}",
@@ -410,7 +413,7 @@ def save_outputs(s: dict) -> None:
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
     print("[1/4] Loading data...")
-    df, df_w = load_data()
+    df, df_w, n_raw = load_data()
 
     print("[2/4] Generating figures...")
     fig_distributions(df)
@@ -420,7 +423,7 @@ def main():
     ransac_results = fig_ransac(df_w)
 
     print("[3/4] Computing statistics...")
-    s = compute_stats(df, df_w, ransac_results)
+    s = compute_stats(df, df_w, ransac_results, n_raw)
 
     print("[4/4] Saving outputs...")
     save_outputs(s)
