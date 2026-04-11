@@ -79,7 +79,8 @@ def write_toml(sections: dict, path: Path) -> None:
         lines.append(f"[{section}]")
         for key, value in values.items():
             if isinstance(value, str):
-                lines.append(f'{key} = "{value}"')
+                val_esc = value.replace('\\', r'\\').replace('"', r'\"')
+                lines.append(f'{key} = "{val_esc}"')
             elif isinstance(value, bool):
                 lines.append(f'{key} = {"true" if value else "false"}')
             else:
