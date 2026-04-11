@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make report:*)",
+      "Bash(source .venv/bin/activate)",
+      "Bash(python src/problem3.py)",
+      "Bash(uv add:*)",
+      "Bash(uv run:*)",
+      "Bash(wait)",
+      "Bash(typst compile:*)",
+      "Bash(ls:*)"
+    ]
+  }
+}

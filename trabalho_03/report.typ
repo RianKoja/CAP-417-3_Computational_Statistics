@@ -85,31 +85,47 @@ We simulated two populations of $1,000,000$ items:
 - *Discrete:* $X tilde "Bernoulli"(p=0.3)$ — true $mu = 0.3$, $sigma = sqrt(0.21) approx 0.458$.
 - *Continuous:* $X tilde "Exponential"(lambda=1)$ — true $mu = 1$, $sigma = 1$.
 
-For each population we estimated the mean two ways, repeated 2,000 times:
+For each population, we compared estimating the true mean and true standard deviation under two different regimens that use the exact same quantity of data ($500$ observations drawn from the population). To see what happens to the standard deviation of the estimators themselves, we repeated each regimen 1,000 times:
 
-1. *Bootstrap (small sample):* draw $n=30$ values with replacement, compute the mean.
-2. *Large sample:* draw $n=1000$ values without replacement, compute the mean.
+1. *Batch/Segmented Procedure ($20 times 25$):* We draw 500 items from the actual population and segment them into 20 independent batches of $n=25$. For the mean, we take the mean of the 20 batch means. For the standard deviation, we calculate the variance of each of the 20 batches, average those 20 variances, and take the square root.
+2. *Large Sample Procedure ($1 times 500$):* We draw 500 items straight from the population simultaneously and compute the mean and standard deviation of the single large pool.
+
+By repeating the entire macro-experiment 1,000 times, we can see exactly what happens to the precision of the variance tracking. Note that for the sampling mean, averaging the means of 20 equally-sized batches is mathematically identical to calculating the mean of the pooled $500$ samples.
 
 #figure(
   image("figures/problem1_sampling.svg", width: 95%),
   caption: [
-    Sampling distributions of the mean for Bernoulli(0.3) and Exponential(1) populations.
-    Each row shows the true distribution (left), bootstrap means with $n=30$ (middle), and
-    large-sample means with $n=1000$ (right).  The dashed curve is the theoretical Normal
-    $cal(N)(mu, sigma^2/n)$.
+    Histograms of 1,000 Mean estimates. Left: True Population distributions. Middle: 
+    Overlay of the means of the $20 times 25$ strategy versus the $1 times 500$ pooled large 
+    sample strategy. As expected, their distributions over 1,000 trials are perfectly identical.
   ],
 ) <sampling_dist>
 
 #figure(
   image("figures/problem1_std_comparison.svg", width: 75%),
   caption: [
-    Empirical standard deviation of the sample mean (blue bars) vs.\ the
-    theoretical $sigma/sqrt(n)$ (orange bars) for bootstrap ($n=30$) and
-    large-sample ($n=1000$) approaches.
+    Histograms of 1,000 Standard Deviation estimates. Both the "average of 20 subset variances"
+    (red) and the "pooled variance of 500" (green) closely track the true population standard deviation.
   ],
 ) <std_comp>
 
-*Observations.*  @sampling_dist shows that, for both distributions, the histogram of sample means closely follows the theoretical Normal curve.  At $n=30$ the Exponential case retains a slight positive skew, which disappears almost entirely at $n=1000$.  @std_comp confirms that the empirical standard errors match $sigma/sqrt(n)$: the large-sample estimator reduces the standard error by a factor of $sqrt(1000/30) approx 5.77$ relative to the bootstrap estimator, at the cost of requiring more data per estimate.
+*Observations.* The goal was to test whether getting the variance of 25 samples 20 times and averaging the variances works better or worse than taking the variance of 500 samples at once. 
+First, @sampling_dist clearly shows that for the sample mean, segmenting the data mathematically makes absolutely no difference: $overline(x)_(20 times 25) equiv overline(x)_(500)$. 
+However, @std_comp illustrates *what happens to the variance estimation*. The variance of a sample variance estimator generally scales as $2sigma^4 slash (n-1)$. Averaging 20 independent unbiased variance estimators of size 25 produces an unbiased estimator whose total variance is proportional to $1/20 dot 2/(25-1) = 2/480 = 1/240$. By contrast, pooling all 500 items to calculate a single variance produces an estimator with variance proportional to $2/(500-1) \approx 1/249.5$. 
+Therefore, mathematically and visually, the estimators have nearly identical spreads ($1/240$ vs $1/249.5$). Getting the variance of 25 samples 20 times is *only very slightly worse* than taking the variance of 500 items directly, since sequential small batches ($24 times 20 = 480$ intrinsic degrees of freedom) are marginally less efficient than a single pooled batch ($499$ degrees of freedom).
+
+== Bootstrap Inference from a Single Sample
+
+If neither the true variance nor the true mean (nor the underlying distribution format) were known a priori, we would rely on the traditional Bootstrap resampling method to estimate our own error. To demonstrate this, we drew *exactly one* real sample of size $n=50$, and resampled it uniformly with replacement 1,000 times to infer the precision of the mean and standard deviation.
+
+#figure(
+  image("figures/problem1_bootstrap_inference.svg", width: 95%),
+  caption: [
+    Histograms generated via 1,000 bootstrap resamples of a *single* $n=50$ dataset. The distribution widths (Bootstrap SE) perfectly approximate the true variation (True SE) of our mean and standard deviation estimators.
+  ],
+) <boot_inference>
+
+As shown in @boot_inference, even though we only possess 50 isolated data points, analyzing the variance across 1,000 bootstrap resamples bounds the True Standard Error without requiring a known underlying distribution format. The Bootstrap Standard Errors approximate the overall True SE—confirming that computation can substitute for unavailable true population structures when trying to estimate our confidence in finite descriptive statistics.
 
 // ============================================================
 = Problem 2: Central Limit Theorem and Confidence Intervals

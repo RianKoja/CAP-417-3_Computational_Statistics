@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make all 2>&1)",
+      "Bash(make report 2>&1)"
+    ]
+  }
+}

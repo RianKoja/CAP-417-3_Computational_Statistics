@@ -2,3 +2,5 @@
 *.pdf
 *.png
 .venv
+*.svg
+*.jpg
