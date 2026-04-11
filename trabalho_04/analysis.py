@@ -108,10 +108,12 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
     df = pd.DataFrame(rows).sort_values("id").reset_index(drop=True)
 
     if REMOVE_OUTLIERS:
+        mask = pd.Series(True, index=df.index)
         for col in FEATURES:
             q1, q3 = df[col].quantile(0.25), df[col].quantile(0.75)
             iqr = q3 - q1
-            df = df[(df[col] >= q1 - 3 * iqr) & (df[col] <= q3 + 3 * iqr)]
+            mask &= df[col].between(q1 - 3 * iqr, q3 + 3 * iqr)
+        df = df[mask]
 
     df = df.reset_index(drop=True)
     df_w = df[df["weight"] != -1].copy().reset_index(drop=True)
