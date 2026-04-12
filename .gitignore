@@ -4,3 +4,5 @@
 .venv
 *.svg
 *.jpg
+
+.claude
