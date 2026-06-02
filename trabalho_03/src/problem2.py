@@ -13,7 +13,8 @@ Creates figures illustrating:
 from pathlib import Path
 import numpy as np
 import matplotlib
-matplotlib.use('Agg')
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from scipy import stats
 
@@ -43,29 +44,51 @@ def plot_clt_convergence():
     fig.suptitle(
         "Central Limit Theorem: Sampling Distribution of the Mean\n"
         "Population: Normal(μ=186, σ=12)",
-        fontsize=12, fontweight="bold",
+        fontsize=12,
+        fontweight="bold",
     )
 
     for ax, n in zip(axes, sample_sizes):
-        sample_means = np.array([
-            rng.normal(population_mean, population_std, n).mean()
-            for _ in range(n_repeats)
-        ])
+        sample_means = np.array(
+            [
+                rng.normal(population_mean, population_std, n).mean()
+                for _ in range(n_repeats)
+            ]
+        )
         theoretical_std = population_std / np.sqrt(n)
         x = np.linspace(sample_means.min(), sample_means.max(), 300)
 
-        ax.hist(sample_means, bins=50, density=True, color="#4C72B0",
-                edgecolor="white", alpha=0.7, label="Simulated")
-        ax.plot(x, stats.norm.pdf(x, population_mean, theoretical_std),
-                "r-", lw=2, label=f"N(μ, σ²/{n})")
+        ax.hist(
+            sample_means,
+            bins=50,
+            density=True,
+            color="#4C72B0",
+            edgecolor="white",
+            alpha=0.7,
+            label="Simulated",
+        )
+        ax.plot(
+            x,
+            stats.norm.pdf(x, population_mean, theoretical_std),
+            "r-",
+            lw=2,
+            label=f"N(μ, σ²/{n})",
+        )
         ax.set_title(f"n = {n}", fontsize=11)
         ax.set_xlabel("Sample Mean")
         if ax is axes[0]:
             ax.set_ylabel("Density")
         ax.legend(fontsize=7)
-        ax.text(0.97, 0.95, f"σ/√n={theoretical_std:.2f}",
-                transform=ax.transAxes, ha="right", va="top", fontsize=8,
-                bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.5))
+        ax.text(
+            0.97,
+            0.95,
+            f"σ/√n={theoretical_std:.2f}",
+            transform=ax.transAxes,
+            ha="right",
+            va="top",
+            fontsize=8,
+            bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.5),
+        )
 
     fig.tight_layout()
     out = FIGURES_DIR / "problem2_clt.svg"
@@ -90,7 +113,7 @@ def plot_confidence_intervals():
     # CI for the variance  (chi-squared)
     chi2_low = stats.chi2.ppf(ALPHA / 2, df=df)
     chi2_high = stats.chi2.ppf(1 - ALPHA / 2, df=df)
-    ci_var = (df * SAMPLE_STD ** 2 / chi2_high, df * SAMPLE_STD ** 2 / chi2_low)
+    ci_var = (df * SAMPLE_STD**2 / chi2_high, df * SAMPLE_STD**2 / chi2_low)
     ci_std = (np.sqrt(ci_var[0]), np.sqrt(ci_var[1]))
 
     print(f"95% CI for mean:  ({ci_mean[0]:.2f}, {ci_mean[1]:.2f})")
@@ -120,8 +143,11 @@ def plot_confidence_intervals():
 
     # ── Figure ────────────────────────────────────────────────────────────────
     fig, axes = plt.subplots(1, 2, figsize=(13, 5))
-    fig.suptitle("95% Confidence Interval — Cholesterol Data (n=25, x̄=186, s=12)",
-                 fontsize=12, fontweight="bold")
+    fig.suptitle(
+        "95% Confidence Interval — Cholesterol Data (n=25, x̄=186, s=12)",
+        fontsize=12,
+        fontweight="bold",
+    )
 
     # Left: t-distribution for the mean
     ax = axes[0]
@@ -130,8 +156,13 @@ def plot_confidence_intervals():
     ax.plot(x, stats.t.pdf(x, df=df_plot), "k-", lw=2, label=f"t({df_plot})")
     x_fill_lo = np.linspace(-5, -t_crit, 200)
     x_fill_hi = np.linspace(t_crit, 5, 200)
-    ax.fill_between(x_fill_lo, stats.t.pdf(x_fill_lo, df_plot), alpha=0.4,
-                    color="red", label=f"α/2 = {ALPHA/2}")
+    ax.fill_between(
+        x_fill_lo,
+        stats.t.pdf(x_fill_lo, df_plot),
+        alpha=0.4,
+        color="red",
+        label=f"α/2 = {ALPHA / 2}",
+    )
     ax.fill_between(x_fill_hi, stats.t.pdf(x_fill_hi, df_plot), alpha=0.4, color="red")
     ax.axvline(-t_crit, color="red", ls="--", lw=1.2)
     ax.axvline(t_crit, color="red", ls="--", lw=1.2)
@@ -143,16 +174,23 @@ def plot_confidence_intervals():
         fontsize=10,
     )
     ax.legend(fontsize=9)
-    ax.text(0.5, 0.05,
-            f"t_crit = ±{t_crit:.3f}\nSE = {se_mean:.3f}",
-            transform=ax.transAxes, ha="center", fontsize=9,
-            bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.5))
+    ax.text(
+        0.5,
+        0.05,
+        f"t_crit = ±{t_crit:.3f}\nSE = {se_mean:.3f}",
+        transform=ax.transAxes,
+        ha="center",
+        fontsize=9,
+        bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.5),
+    )
 
     # Right: CI coverage plot (first 100 simulations)
     ax = axes[1]
     show = 100
-    colors = ["#4C72B0" if lo <= true_mu <= hi else "#C44E52"
-              for lo, hi in zip(ci_lo_all[:show], ci_hi_all[:show])]
+    colors = [
+        "#4C72B0" if lo <= true_mu <= hi else "#C44E52"
+        for lo, hi in zip(ci_lo_all[:show], ci_hi_all[:show])
+    ]
     for i, (lo, hi, c) in enumerate(zip(ci_lo_all[:show], ci_hi_all[:show], colors)):
         ax.plot([lo, hi], [i, i], color=c, lw=0.8, alpha=0.7)
     ax.axvline(true_mu, color="black", lw=1.5, ls="--", label=f"True μ={true_mu}")

@@ -6,9 +6,11 @@ Outputs: figures/04_timing.svg
          figures/04_param_histograms.svg
          sections/04_timing.csv
 """
+
 from pathlib import Path
 import numpy as np
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import csv, time
@@ -22,12 +24,12 @@ SECTIONS.mkdir(exist_ok=True)
 rng = np.random.default_rng(0)
 
 A_TRUE, B_TRUE = 1.5, -2.0
-N_DATA   = 50
+N_DATA = 50
 N_TRIALS = 500
-TOLERANCE = 0.5          # early-stop threshold on L2
+TOLERANCE = 0.5  # early-stop threshold on L2
 GRID_SIZE = 200
-SIGMAS    = [0.1, 0.5, 2.0]
-SEARCH_BOUND = 5.0       # [−5, 5] for both a and b
+SIGMAS = [0.1, 0.5, 2.0]
+SEARCH_BOUND = 5.0  # [−5, 5] for both a and b
 
 
 def make_data(sigma, seed):
@@ -47,7 +49,7 @@ def exhaustive_grid(x, y, g=GRID_SIZE):
     b_range = np.linspace(-SEARCH_BOUND, SEARCH_BOUND, g)
     AA, BB = np.meshgrid(a_range, b_range)
     resid = y[None, None, :] - (AA[:, :, None] * x[None, None, :] + BB[:, :, None])
-    L2 = np.sum(resid ** 2, axis=2)
+    L2 = np.sum(resid**2, axis=2)
     idx = np.unravel_index(np.argmin(L2), L2.shape)
     return AA[idx], BB[idx]
 
@@ -72,7 +74,7 @@ def stochastic_search(x, y, tol=TOLERANCE, max_iter=50_000, seed=None):
 
 
 timing_rows = []
-param_data  = {}   # sigma -> {a_stoch, b_stoch}
+param_data = {}  # sigma -> {a_stoch, b_stoch}
 
 for sigma in SIGMAS:
     print(f"\n--- sigma = {sigma} ---")
@@ -85,7 +87,7 @@ for sigma in SIGMAS:
         exhaustive_grid(x, y)
         grid_times.append(time.perf_counter() - t0)
     t_grid_mean = np.mean(grid_times) * 1e3
-    t_grid_std  = np.std(grid_times) * 1e3
+    t_grid_std = np.std(grid_times) * 1e3
     print(f"  Grid search:   {t_grid_mean:.1f} ± {t_grid_std:.1f} ms")
 
     # ── N_TRIALS stochastic runs ──────────────────────────────────────────────
@@ -99,19 +101,23 @@ for sigma in SIGMAS:
         iters_vals.append(iters)
 
     t_stoch_mean = np.mean(stoch_times) * 1e3
-    t_stoch_std  = np.std(stoch_times) * 1e3
-    print(f"  Stochastic:    {t_stoch_mean:.1f} ± {t_stoch_std:.1f} ms  |  "
-          f"iters (mean) = {np.mean(iters_vals):.0f}  |  "
-          f"â mean={np.mean(a_vals):.3f}, b̂ mean={np.mean(b_vals):.3f}")
+    t_stoch_std = np.std(stoch_times) * 1e3
+    print(
+        f"  Stochastic:    {t_stoch_mean:.1f} ± {t_stoch_std:.1f} ms  |  "
+        f"iters (mean) = {np.mean(iters_vals):.0f}  |  "
+        f"â mean={np.mean(a_vals):.3f}, b̂ mean={np.mean(b_vals):.3f}"
+    )
 
-    timing_rows.append({
-        "sigma": sigma,
-        "grid_mean_ms": round(t_grid_mean, 2),
-        "grid_std_ms": round(t_grid_std, 2),
-        "stoch_mean_ms": round(t_stoch_mean, 2),
-        "stoch_std_ms": round(t_stoch_std, 2),
-        "stoch_iters_mean": round(np.mean(iters_vals), 1),
-    })
+    timing_rows.append(
+        {
+            "sigma": sigma,
+            "grid_mean_ms": round(t_grid_mean, 2),
+            "grid_std_ms": round(t_grid_std, 2),
+            "stoch_mean_ms": round(t_stoch_mean, 2),
+            "stoch_std_ms": round(t_stoch_std, 2),
+            "stoch_iters_mean": round(np.mean(iters_vals), 1),
+        }
+    )
     param_data[sigma] = {"a": np.array(a_vals), "b": np.array(b_vals)}
 
 # ── timing CSV ────────────────────────────────────────────────────────────────
@@ -130,10 +136,26 @@ stoch_means = [r["stoch_mean_ms"] for r in timing_rows]
 grid_stds = [r["grid_std_ms"] for r in timing_rows]
 stoch_stds = [r["stoch_std_ms"] for r in timing_rows]
 
-bars1 = ax.bar(x_pos - width/2, grid_means, width, yerr=grid_stds, capsize=4,
-               label="Exhaustive Grid", color="#e74c3c", alpha=0.85)
-bars2 = ax.bar(x_pos + width/2, stoch_means, width, yerr=stoch_stds, capsize=4,
-               label="Stochastic Search", color="#3498db", alpha=0.85)
+bars1 = ax.bar(
+    x_pos - width / 2,
+    grid_means,
+    width,
+    yerr=grid_stds,
+    capsize=4,
+    label="Exhaustive Grid",
+    color="#e74c3c",
+    alpha=0.85,
+)
+bars2 = ax.bar(
+    x_pos + width / 2,
+    stoch_means,
+    width,
+    yerr=stoch_stds,
+    capsize=4,
+    label="Stochastic Search",
+    color="#3498db",
+    alpha=0.85,
+)
 ax.set_xticks(x_pos)
 ax.set_xticklabels([f"$\\sigma={s}$" for s in SIGMAS])
 ax.set_ylabel("Time (ms)", fontsize=11)
@@ -147,8 +169,11 @@ plt.close()
 
 # ── parameter histograms ──────────────────────────────────────────────────────
 fig, axes = plt.subplots(2, len(SIGMAS), figsize=(len(SIGMAS) * 4, 6), sharey=False)
-fig.suptitle(r"Distributions of recovered $\hat{a}$ and $\hat{b}$ across 500 stochastic runs",
-             fontsize=12, y=1.01)
+fig.suptitle(
+    r"Distributions of recovered $\hat{a}$ and $\hat{b}$ across 500 stochastic runs",
+    fontsize=12,
+    y=1.01,
+)
 
 for col, sigma in enumerate(SIGMAS):
     a_arr = param_data[sigma]["a"]
@@ -157,9 +182,16 @@ for col, sigma in enumerate(SIGMAS):
     # â
     ax = axes[0, col]
     ax.hist(a_arr, bins=40, color="#e74c3c", alpha=0.75, density=True)
-    ax.axvline(A_TRUE, color="k", linewidth=2, linestyle="--", label=f"True $a={A_TRUE}$")
-    ax.axvline(a_arr.mean(), color="#c0392b", linewidth=1.5, linestyle=":",
-               label=f"Mean $\\hat{{a}}={a_arr.mean():.3f}$")
+    ax.axvline(
+        A_TRUE, color="k", linewidth=2, linestyle="--", label=f"True $a={A_TRUE}$"
+    )
+    ax.axvline(
+        a_arr.mean(),
+        color="#c0392b",
+        linewidth=1.5,
+        linestyle=":",
+        label=f"Mean $\\hat{{a}}={a_arr.mean():.3f}$",
+    )
     ax.set_title(f"$\\hat{{a}}$, $\\sigma={sigma}$", fontsize=10)
     ax.legend(fontsize=7)
     ax.grid(True, alpha=0.25)
@@ -167,9 +199,16 @@ for col, sigma in enumerate(SIGMAS):
     # b̂
     ax = axes[1, col]
     ax.hist(b_arr, bins=40, color="#3498db", alpha=0.75, density=True)
-    ax.axvline(B_TRUE, color="k", linewidth=2, linestyle="--", label=f"True $b={B_TRUE}$")
-    ax.axvline(b_arr.mean(), color="#2980b9", linewidth=1.5, linestyle=":",
-               label=f"Mean $\\hat{{b}}={b_arr.mean():.3f}$")
+    ax.axvline(
+        B_TRUE, color="k", linewidth=2, linestyle="--", label=f"True $b={B_TRUE}$"
+    )
+    ax.axvline(
+        b_arr.mean(),
+        color="#2980b9",
+        linewidth=1.5,
+        linestyle=":",
+        label=f"Mean $\\hat{{b}}={b_arr.mean():.3f}$",
+    )
     ax.set_title(f"$\\hat{{b}}$, $\\sigma={sigma}$", fontsize=10)
     ax.legend(fontsize=7)
     ax.grid(True, alpha=0.25)

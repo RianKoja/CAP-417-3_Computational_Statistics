@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def export_to_typst(data, filepath):
     """
     Export a dictionary of values to a Typst file as constants.

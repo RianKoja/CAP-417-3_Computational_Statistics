@@ -4,5 +4,7 @@
 .venv
 *.svg
 *.jpg
+*.parquet
+hands_on_03/P_model_and_Spatio_Temporal_Multifractal_Cascade_Model_(STM_Model_2+1D).ipynb
 
 .claude

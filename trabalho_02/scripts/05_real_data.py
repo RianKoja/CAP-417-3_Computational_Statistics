@@ -12,13 +12,16 @@ Outputs: figures/05_returns.svg
          sections/05_aic_bic.csv
          sections/05_dist_comparison.csv
 """
+
 from pathlib import Path
 import warnings
+
 warnings.filterwarnings("ignore")
 
 import numpy as np
 import pandas as pd
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
@@ -35,17 +38,25 @@ import yfinance as yf
 from arch import arch_model
 from scipy import stats
 
-TICKERS = {"PETR4.SA": "Petrobras", "VALE3.SA": "Vale", "^BVSP": "Ibovespa", "SPY": "S&P 500"}
+TICKERS = {
+    "PETR4.SA": "Petrobras",
+    "VALE3.SA": "Vale",
+    "^BVSP": "Ibovespa",
+    "SPY": "S&P 500",
+}
 START, END = "2019-01-01", "2024-12-31"
 
 print("Downloading data...")
-raw = yf.download(list(TICKERS.keys()), start=START, end=END,
-                  auto_adjust=True, progress=False)["Close"]
+raw = yf.download(
+    list(TICKERS.keys()), start=START, end=END, auto_adjust=True, progress=False
+)["Close"]
 raw.columns = [TICKERS[t] for t in raw.columns]
 raw = raw.dropna()
 
-log_returns = np.log(raw / raw.shift(1)).dropna() * 100   # in %
-print(f"Data shape: {log_returns.shape}  ({log_returns.index[0].date()} → {log_returns.index[-1].date()})")
+log_returns = np.log(raw / raw.shift(1)).dropna() * 100  # in %
+print(
+    f"Data shape: {log_returns.shape}  ({log_returns.index[0].date()} → {log_returns.index[-1].date()})"
+)
 
 # ── Figure 1: return series ───────────────────────────────────────────────────
 fig, axes = plt.subplots(2, 2, figsize=(12, 6), sharex=True)
@@ -71,8 +82,13 @@ for ax, col in zip(axes.flat, log_returns.columns):
     slope, intercept, r_val, p_val, _ = stats.linregress(x_, y_)
     ax.scatter(x_, y_, s=4, alpha=0.35, color="#555")
     xp = np.linspace(x_.min(), x_.max(), 200)
-    ax.plot(xp, slope * xp + intercept, color="#e74c3c", linewidth=1.8,
-            label=f"$\\hat{{a}}={slope:.3f}$, $R^2={r_val**2:.3f}$")
+    ax.plot(
+        xp,
+        slope * xp + intercept,
+        color="#e74c3c",
+        linewidth=1.8,
+        label=f"$\\hat{{a}}={slope:.3f}$, $R^2={r_val**2:.3f}$",
+    )
     ax.set_title(col, fontsize=10)
     ax.set_xlabel("$r_{t-1}$", fontsize=9)
     ax.set_ylabel("$r_t$", fontsize=9)
@@ -95,7 +111,7 @@ garch_params_rows = []
 aic_bic_rows = []
 
 # For volatility and QQ plots:
-fitted_models = {}   # col -> GARCH(1,1) Normal result
+fitted_models = {}  # col -> GARCH(1,1) Normal result
 
 for col in log_returns.columns:
     r = log_returns[col].dropna().values
@@ -113,23 +129,26 @@ for col in log_returns.columns:
             if spec_name == "GARCH(1,1)":
                 fitted_models[col] = res
                 params = res.params
-                garch_params_rows.append({
-                    "ticker": col,
-                    "omega": round(params.get("omega", np.nan), 5),
-                    "alpha[1]": round(params.get("alpha[1]", np.nan), 5),
-                    "beta[1]": round(params.get("beta[1]", np.nan), 5),
-                    "persistence": round(
-                        params.get("alpha[1]", 0) + params.get("beta[1]", 0), 5),
-                    "AIC": round(res.aic, 2),
-                    "BIC": round(res.bic, 2),
-                })
+                garch_params_rows.append(
+                    {
+                        "ticker": col,
+                        "omega": round(params.get("omega", np.nan), 5),
+                        "alpha[1]": round(params.get("alpha[1]", np.nan), 5),
+                        "beta[1]": round(params.get("beta[1]", np.nan), 5),
+                        "persistence": round(
+                            params.get("alpha[1]", 0) + params.get("beta[1]", 0), 5
+                        ),
+                        "AIC": round(res.aic, 2),
+                        "BIC": round(res.bic, 2),
+                    }
+                )
         except Exception as e:
             print(f"  {spec_name} failed: {e}")
 
     aic_bic_rows.append(aic_row)
 
 # ── GARCH(1,1) — Student-t distribution (new) ─────────────────────────────────
-fitted_models_t = {}   # col -> GARCH(1,1) Student-t result
+fitted_models_t = {}  # col -> GARCH(1,1) Student-t result
 dist_comparison_rows = []
 
 print("\n--- Fitting GARCH(1,1) Normal vs. Student-t ---")
@@ -150,7 +169,9 @@ for col in log_returns.columns:
         row["t_AIC"] = round(res_t.aic, 2)
         row["t_BIC"] = round(res_t.bic, 2)
         row["nu"] = round(nu, 2)
-        print(f"  {col}: Normal AIC={row['normal_AIC']}, t AIC={row['t_AIC']}  (nu={nu:.2f})")
+        print(
+            f"  {col}: Normal AIC={row['normal_AIC']}, t AIC={row['t_AIC']}  (nu={nu:.2f})"
+        )
     except Exception as e:
         print(f"  {col} t-fit failed: {e}")
         row.setdefault("t_AIC", "—")
@@ -166,9 +187,15 @@ for ax, col in zip(axes.flat, log_returns.columns):
     if res is None:
         continue
     cond_vol = res.conditional_volatility
-    dates = log_returns[col].dropna().index[-len(cond_vol):]
-    ax.plot(dates, log_returns[col].dropna().values[-len(cond_vol):],
-            color="#aaa", linewidth=0.5, alpha=0.7, label="Returns")
+    dates = log_returns[col].dropna().index[-len(cond_vol) :]
+    ax.plot(
+        dates,
+        log_returns[col].dropna().values[-len(cond_vol) :],
+        color="#aaa",
+        linewidth=0.5,
+        alpha=0.7,
+        label="Returns",
+    )
     ax.plot(dates, cond_vol, color="#e74c3c", linewidth=1.2, label="$\\hat{\\sigma}_t$")
     ax.plot(dates, -cond_vol, color="#e74c3c", linewidth=1.2)
     ax.set_title(col, fontsize=10)
@@ -181,8 +208,10 @@ plt.close()
 
 # ── Figure 4: Q-Q plots — Normal GARCH residuals vs Normal ───────────────────
 fig, axes = plt.subplots(2, 2, figsize=(10, 8))
-fig.suptitle("Q-Q Plot of GARCH(1,1)-Normal Standardised Residuals\nvs. Normal Distribution",
-             fontsize=11)
+fig.suptitle(
+    "Q-Q Plot of GARCH(1,1)-Normal Standardised Residuals\nvs. Normal Distribution",
+    fontsize=11,
+)
 for ax, col in zip(axes.flat, log_returns.columns):
     res = fitted_models.get(col)
     if res is None:
@@ -202,16 +231,19 @@ plt.close()
 
 # ── Figure 4b: Q-Q plots — Student-t GARCH residuals vs t(nu) ────────────────
 fig, axes = plt.subplots(2, 2, figsize=(10, 8))
-fig.suptitle("Q-Q Plot of GARCH(1,1)-t Standardised Residuals\nvs. Student-t Distribution",
-             fontsize=11)
+fig.suptitle(
+    "Q-Q Plot of GARCH(1,1)-t Standardised Residuals\nvs. Student-t Distribution",
+    fontsize=11,
+)
 for ax, col in zip(axes.flat, log_returns.columns):
     res_t = fitted_models_t.get(col)
     if res_t is None:
         continue
     std_resid = res_t.std_resid
     nu = res_t.params.get("nu", 5.0)
-    (osm, osr), (slope, intercept, r2) = stats.probplot(std_resid, dist="t",
-                                                         sparams=(nu,))
+    (osm, osr), (slope, intercept, r2) = stats.probplot(
+        std_resid, dist="t", sparams=(nu,)
+    )
     ax.plot(osm, osr, ".", markersize=3, alpha=0.5, color="#3498db")
     ax.plot(osm, slope * np.array(osm) + intercept, "r-", linewidth=1.5)
     ax.set_title(f"{col}  ($\\nu={nu:.1f}$)", fontsize=10)
@@ -226,8 +258,10 @@ plt.close()
 # ── Figure 6: side-by-side QQ comparison for one asset (Petrobras) ───────────
 col_demo = "Petrobras"
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4.5))
-fig.suptitle(f"Distribution Comparison — {col_demo}: GARCH(1,1)-Normal vs. GARCH(1,1)-t",
-             fontsize=11)
+fig.suptitle(
+    f"Distribution Comparison — {col_demo}: GARCH(1,1)-Normal vs. GARCH(1,1)-t",
+    fontsize=11,
+)
 
 res_n = fitted_models.get(col_demo)
 res_t = fitted_models_t.get(col_demo)
@@ -272,13 +306,20 @@ for col_idx, col in enumerate(log_returns.columns):
     std_resid = res.std_resid
 
     ax_raw = axes[0, col_idx]
-    plot_acf(r ** 2, lags=30, ax=ax_raw, title=f"{col} — Raw $r_t^2$",
-             alpha=0.05, zero=False)
+    plot_acf(
+        r**2, lags=30, ax=ax_raw, title=f"{col} — Raw $r_t^2$", alpha=0.05, zero=False
+    )
     ax_raw.set_xlabel("")
 
     ax_fit = axes[1, col_idx]
-    plot_acf(std_resid ** 2, lags=30, ax=ax_fit, title=f"{col} — Std Residuals$^2$",
-             alpha=0.05, zero=False)
+    plot_acf(
+        std_resid**2,
+        lags=30,
+        ax=ax_fit,
+        title=f"{col} — Std Residuals$^2$",
+        alpha=0.05,
+        zero=False,
+    )
 
 plt.tight_layout()
 fig.savefig(FIGURES / "05_acf.svg", format="svg", bbox_inches="tight")

@@ -3,9 +3,11 @@ Script 01: Basic Data Visualization
 Shows how parameters a and b of y = ax + b affect the line's shape.
 Outputs: figures/01_param_grid.svg
 """
+
 from pathlib import Path
 import numpy as np
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -24,13 +26,16 @@ ncols = len(A_VALUES)
 nrows = len(B_VALUES)
 
 fig, axes = plt.subplots(
-    nrows, ncols,
+    nrows,
+    ncols,
     figsize=(ncols * 3.2, nrows * 2.8),
-    sharex=True, sharey=False,
+    sharex=True,
+    sharey=False,
 )
 fig.suptitle(
     r"$y = ax + b$ — effect of parameters $a$ (columns) and $b$ (rows)",
-    fontsize=13, y=1.01,
+    fontsize=13,
+    y=1.01,
 )
 
 for row, b in enumerate(B_VALUES):
@@ -66,8 +71,18 @@ import csv
 rows = []
 for a in A_VALUES:
     for b in B_VALUES:
-        slope_dir = "positive" if a > 0 else ("negative" if a < 0 else "zero (horizontal)")
-        rows.append({"a": a, "b": b, "slope": slope_dir, "y-intercept": b, "x-intercept": "n/a" if a == 0 else f"{-b/a:.2f}"})
+        slope_dir = (
+            "positive" if a > 0 else ("negative" if a < 0 else "zero (horizontal)")
+        )
+        rows.append(
+            {
+                "a": a,
+                "b": b,
+                "slope": slope_dir,
+                "y-intercept": b,
+                "x-intercept": "n/a" if a == 0 else f"{-b / a:.2f}",
+            }
+        )
 
 csv_out = HERE.parent / "sections" / "01_params.csv"
 csv_out.parent.mkdir(exist_ok=True)
