@@ -23,33 +23,28 @@ REMOVE_OUTLIERS = True
 
 # ── Paths ───────────────────────────────────────────────────────────────────
 DATA_PATH = Path.home() / ".cache/kagglehub/datasets/byunghyunban/congnamul/versions/1"
-JSON_PATH = (
-    DATA_PATH
-    / "Semantic Segmentation Dataset/Single Sample/3024_3024/single_sample_physical_features.json"
-)
+JSON_PATH = DATA_PATH / "Semantic Segmentation Dataset/Single Sample/3024_3024/single_sample_physical_features.json"
 FIGS_DIR = Path("figs")
 OUTPUTS_DIR = Path("outputs")
 FIGS_DIR.mkdir(exist_ok=True)
 OUTPUTS_DIR.mkdir(exist_ok=True)
 
-plt.rcParams.update(
-    {"font.family": "serif", "axes.spines.top": False, "axes.spines.right": False}
-)
+plt.rcParams.update({"font.family": "serif", "axes.spines.top": False, "axes.spines.right": False})
 
 FEATURES = ["length_head", "length_body", "thickness_body", "length_tail"]
 LABELS = {
-    "length_head": "Head Length (mm)",
-    "length_body": "Body Length (mm)",
+    "length_head":    "Head Length (mm)",
+    "length_body":    "Body Length (mm)",
     "thickness_body": "Body Thickness (mm)",
-    "length_tail": "Tail Length (mm)",
-    "weight": "Weight (mg)",
+    "length_tail":    "Tail Length (mm)",
+    "weight":         "Weight (mg)",
 }
 SHORT_LABELS = {
-    "length_head": "Head length",
-    "length_body": "Body length",
+    "length_head":    "Head length",
+    "length_body":    "Body length",
     "thickness_body": "Body thickness",
-    "length_tail": "Tail length",
-    "weight": "Weight",
+    "length_tail":    "Tail length",
+    "weight":         "Weight",
 }
 
 
@@ -85,10 +80,10 @@ def write_toml(sections: dict, path: Path) -> None:
         lines.append(f"[{section}]")
         for key, value in values.items():
             if isinstance(value, str):
-                val_esc = value.replace("\\", r"\\").replace('"', r"\"")
+                val_esc = value.replace('\\', r'\\').replace('"', r'\"')
                 lines.append(f'{key} = "{val_esc}"')
             elif isinstance(value, bool):
-                lines.append(f"{key} = {'true' if value else 'false'}")
+                lines.append(f'{key} = {"true" if value else "false"}')
             else:
                 lines.append(f"{key} = {value}")
         lines.append("")
@@ -133,25 +128,12 @@ def fig_distributions(df: pd.DataFrame) -> None:
     axes = axes.ravel()
     for ax, feat in zip(axes, FEATURES):
         x = df[feat].dropna()
-        ax.hist(
-            x,
-            bins=25,
-            density=True,
-            alpha=0.5,
-            color="#4878CF",
-            edgecolor="white",
-            linewidth=0.4,
-        )
+        ax.hist(x, bins=25, density=True, alpha=0.5, color="#4878CF", edgecolor="white", linewidth=0.4)
         kde_x = np.linspace(x.min(), x.max(), 300)
         ax.plot(kde_x, stats.gaussian_kde(x)(kde_x), color="#4878CF", lw=2)
         mu, sigma = x.mean(), x.std()
-        ax.plot(
-            kde_x,
-            stats.norm.pdf(kde_x, mu, sigma),
-            "k--",
-            lw=1.2,
-            label=f"N({mu:.1f}, {sigma:.1f}²)",
-        )
+        ax.plot(kde_x, stats.norm.pdf(kde_x, mu, sigma), "k--", lw=1.2,
+                label=f"N({mu:.1f}, {sigma:.1f}²)")
         ax.set_xlabel(LABELS[feat], fontsize=9)
         ax.set_ylabel("Density", fontsize=9)
         ax.legend(fontsize=7, frameon=False)
@@ -186,25 +168,12 @@ def fig_qqplots(df: pd.DataFrame) -> None:
 def fig_weight_distribution(df_w: pd.DataFrame) -> None:
     x = df_w["weight"].dropna()
     fig, ax = plt.subplots(figsize=(5.5, 3.5))
-    ax.hist(
-        x,
-        bins=25,
-        density=True,
-        alpha=0.5,
-        color="#4878CF",
-        edgecolor="white",
-        linewidth=0.4,
-    )
+    ax.hist(x, bins=25, density=True, alpha=0.5, color="#4878CF", edgecolor="white", linewidth=0.4)
     kde_x = np.linspace(x.min(), x.max(), 300)
     ax.plot(kde_x, stats.gaussian_kde(x)(kde_x), color="#4878CF", lw=2, label="KDE")
     mu, sigma = x.mean(), x.std()
-    ax.plot(
-        kde_x,
-        stats.norm.pdf(kde_x, mu, sigma),
-        "k--",
-        lw=1.2,
-        label=f"N({mu:.3f}, {sigma:.3f}²)",
-    )
+    ax.plot(kde_x, stats.norm.pdf(kde_x, mu, sigma), "k--", lw=1.2,
+            label=f"N({mu:.3f}, {sigma:.3f}²)")
     ax.set_xlabel(LABELS["weight"], fontsize=9)
     ax.set_ylabel("Density", fontsize=9)
     ax.legend(fontsize=8, frameon=False)
@@ -221,20 +190,9 @@ def fig_correlation(df_w: pd.DataFrame) -> None:
     fig, ax = plt.subplots(figsize=(5.5, 4.5))
     corr = sub.corr()
     mask = np.triu(np.ones_like(corr, dtype=bool))
-    sns.heatmap(
-        corr,
-        mask=mask,
-        annot=True,
-        fmt=".2f",
-        cmap="RdBu_r",
-        center=0,
-        vmin=-1,
-        vmax=1,
-        ax=ax,
-        square=True,
-        annot_kws={"size": 9},
-        linewidths=0.5,
-    )
+    sns.heatmap(corr, mask=mask, annot=True, fmt=".2f", cmap="RdBu_r", center=0,
+                vmin=-1, vmax=1, ax=ax, square=True,
+                annot_kws={"size": 9}, linewidths=0.5)
     ax.set_title(f"Pearson Correlations (n = {len(df_w)})", fontsize=10)
     ax.tick_params(labelsize=8)
     fig.tight_layout()
@@ -277,34 +235,21 @@ def fig_ransac(df_w: pd.DataFrame) -> dict:
     ax.set_ylabel("Actual weight (mg)", fontsize=9)
     ax.set_title("OLS: Fitted vs Actual", fontsize=10)
     ax.legend(fontsize=8, frameon=False)
-    ax.set_xlim(lims)
-    ax.set_ylim(lims)
+    ax.set_xlim(lims); ax.set_ylim(lims)
 
     ax = axes[1]
-    ax.scatter(
-        y_ransac[inlier_mask],
-        y[inlier_mask],
-        s=18,
-        alpha=0.65,
-        color="#4878CF",
-        label=f"Inliers (n={inlier_mask.sum()})",
-    )
-    ax.scatter(
-        y_ransac[outlier_mask],
-        y[outlier_mask],
-        s=30,
-        alpha=0.75,
-        color="#E84A5F",
-        marker="x",
-        label=f"Outliers (n={outlier_mask.sum()})",
-    )
-    ax.plot(lims, lims, "k--", lw=1.2, label=f"RANSAC  R²(inliers)={r2_ransac_in:.3f}")
+    ax.scatter(y_ransac[inlier_mask], y[inlier_mask],
+               s=18, alpha=0.65, color="#4878CF", label=f"Inliers (n={inlier_mask.sum()})")
+    ax.scatter(y_ransac[outlier_mask], y[outlier_mask],
+               s=30, alpha=0.75, color="#E84A5F", marker="x",
+               label=f"Outliers (n={outlier_mask.sum()})")
+    ax.plot(lims, lims, "k--", lw=1.2,
+            label=f"RANSAC  R²(inliers)={r2_ransac_in:.3f}")
     ax.set_xlabel("Fitted weight (mg)", fontsize=9)
     ax.set_ylabel("Actual weight (mg)", fontsize=9)
     ax.set_title("RANSAC: Fitted vs Actual", fontsize=10)
     ax.legend(fontsize=8, frameon=False)
-    ax.set_xlim(lims)
-    ax.set_ylim(lims)
+    ax.set_xlim(lims); ax.set_ylim(lims)
 
     fig.tight_layout()
     fig.savefig(FIGS_DIR / "fig4_ransac.svg", bbox_inches="tight")
@@ -321,36 +266,30 @@ def fig_ransac(df_w: pd.DataFrame) -> dict:
 
 
 # ── Statistics computation ────────────────────────────────────────────────────
-def compute_stats(
-    df: pd.DataFrame, df_w: pd.DataFrame, ransac_results: dict, n_raw: int
-) -> dict:
+def compute_stats(df: pd.DataFrame, df_w: pd.DataFrame, ransac_results: dict, n_raw: int) -> dict:
     # Descriptive statistics table
     desc_rows = []
     for feat in FEATURES:
         x = df[feat].dropna()
-        desc_rows.append(
-            {
-                "Feature": LABELS[feat],
-                "Mean": f"{x.mean():.2f}",
-                "SD": f"{x.std():.2f}",
-                "Median": f"{x.median():.2f}",
-                "Skewness": f"{stats.skew(x):.2f}",
-                "Ex. Kurt.": f"{stats.kurtosis(x, fisher=True):.2f}",
-                "Range": f"{x.min():.1f}\u2013{x.max():.1f}",
-            }
-        )
+        desc_rows.append({
+            "Feature": LABELS[feat],
+            "Mean": f"{x.mean():.2f}",
+            "SD": f"{x.std():.2f}",
+            "Median": f"{x.median():.2f}",
+            "Skewness": f"{stats.skew(x):.2f}",
+            "Ex. Kurt.": f"{stats.kurtosis(x, fisher=True):.2f}",
+            "Range": f"{x.min():.1f}\u2013{x.max():.1f}",
+        })
     xw = df_w["weight"]
-    desc_rows.append(
-        {
-            "Feature": LABELS["weight"],
-            "Mean": f"{xw.mean():.3f}",
-            "SD": f"{xw.std():.3f}",
-            "Median": f"{xw.median():.3f}",
-            "Skewness": f"{stats.skew(xw):.2f}",
-            "Ex. Kurt.": f"{stats.kurtosis(xw, fisher=True):.2f}",
-            "Range": f"{xw.min():.2f}\u2013{xw.max():.2f}",
-        }
-    )
+    desc_rows.append({
+        "Feature": LABELS["weight"],
+        "Mean": f"{xw.mean():.3f}",
+        "SD": f"{xw.std():.3f}",
+        "Median": f"{xw.median():.3f}",
+        "Skewness": f"{stats.skew(xw):.2f}",
+        "Ex. Kurt.": f"{stats.kurtosis(xw, fisher=True):.2f}",
+        "Range": f"{xw.min():.2f}\u2013{xw.max():.2f}",
+    })
     desc_df = pd.DataFrame(desc_rows).set_index("Feature")
 
     # Normality tests table
@@ -360,28 +299,22 @@ def compute_stats(
         x = (df[feat] if feat in FEATURES else df_w[feat]).dropna().values
         sw_stat, sw_p = stats.shapiro(x)
         lil_stat, lil_p = lilliefors(x, dist="norm")
-        norm_raw.append(
-            {
-                "feat": feat,
-                "sw_stat": sw_stat,
-                "sw_p": sw_p,
-                "lil_stat": lil_stat,
-                "lil_p": lil_p,
-            }
-        )
+        norm_raw.append({
+            "feat": feat,
+            "sw_stat": sw_stat, "sw_p": sw_p,
+            "lil_stat": lil_stat, "lil_p": lil_p,
+        })
 
-    norm_df = pd.DataFrame(
-        [
-            {
-                "Feature": SHORT_LABELS[r["feat"]],
-                "S-W W": f"{r['sw_stat']:.4f}",
-                "S-W p": fmt_p(r["sw_p"]),
-                "Lil. D": f"{r['lil_stat']:.4f}",
-                "Lil. p": fmt_p(r["lil_p"]),
-            }
-            for r in norm_raw
-        ]
-    ).set_index("Feature")
+    norm_df = pd.DataFrame([
+        {
+            "Feature": SHORT_LABELS[r["feat"]],
+            "S-W W": f"{r['sw_stat']:.4f}",
+            "S-W p": fmt_p(r["sw_p"]),
+            "Lil. D": f"{r['lil_stat']:.4f}",
+            "Lil. p": fmt_p(r["lil_p"]),
+        }
+        for r in norm_raw
+    ]).set_index("Feature")
 
     lil_min_p = min(r["lil_p"] for r in norm_raw)
     weight_norm = norm_raw[-1]
@@ -406,14 +339,12 @@ def compute_stats(
     for pred, label, ransac_c in zip(predictors, labels_model, ransac_coefs):
         ols_c = ols_model.params[pred]
         ols_p = ols_model.pvalues[pred]
-        model_rows.append(
-            {
-                "Predictor": label,
-                "OLS coef.": f"{ols_c:.4f}",
-                "OLS p": fmt_p(ols_p),
-                "RANSAC coef.": f"{ransac_c:.4f}",
-            }
-        )
+        model_rows.append({
+            "Predictor": label,
+            "OLS coef.": f"{ols_c:.4f}",
+            "OLS p": fmt_p(ols_p),
+            "RANSAC coef.": f"{ransac_c:.4f}",
+        })
     model_df = pd.DataFrame(model_rows).set_index("Predictor")
 
     return {
