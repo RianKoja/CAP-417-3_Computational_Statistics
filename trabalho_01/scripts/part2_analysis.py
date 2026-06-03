@@ -35,8 +35,16 @@ def run_part2(seed=42):
     ]:
         cnts = np.bincount(samples, minlength=11)[1:]
         ax.bar(range(1, 11), cnts, color="skyblue", edgecolor="black", alpha=0.8)
-        ax.axvline(st["avg"], color="red", ls="--", lw=1.5, label=f"Mean={st['avg']:.1f}")
-        ax.axvline(st["median"], color="green", ls=":", lw=2, label=f"Median={st['median']:.1f}")
+        ax.axvline(
+            st["avg"], color="red", ls="--", lw=1.5, label=f"Mean={st['avg']:.1f}"
+        )
+        ax.axvline(
+            st["median"],
+            color="green",
+            ls=":",
+            lw=2,
+            label=f"Median={st['median']:.1f}",
+        )
         ax.set_title(f"Frequency Distribution ({title})")
         ax.set_xlabel("Value")
         ax.set_ylabel("Count")
@@ -53,8 +61,11 @@ def run_part2(seed=42):
     # Plot 2: Box plots + empirical CDF with quartile markers
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
     bp = ax1.boxplot(
-        [s5, s100], labels=["n=5", "n=100"], patch_artist=True,
-        boxprops=dict(facecolor="lightblue"), medianprops=dict(color="red", lw=2),
+        [s5, s100],
+        labels=["n=5", "n=100"],
+        patch_artist=True,
+        boxprops=dict(facecolor="lightblue"),
+        medianprops=dict(color="red", lw=2),
     )
     ax1.set_title("Box Plot Comparison: n=5 vs n=100")
     ax1.set_ylabel("Value")
@@ -65,7 +76,9 @@ def run_part2(seed=42):
     ecdf = np.arange(1, len(sorted_s) + 1) / len(sorted_s)
     ax2.step(sorted_s, ecdf, where="post", color="steelblue", lw=2, label="ECDF")
     for pct, val, col, name in [
-        (25, p25, "orange", "Q1"), (50, p50, "red", "Q2/Median"), (75, p75, "purple", "Q3")
+        (25, p25, "orange", "Q1"),
+        (50, p50, "red", "Q2/Median"),
+        (75, p75, "purple", "Q3"),
     ]:
         ax2.axvline(val, color=col, ls="--", alpha=0.85, label=f"{name}={val:.0f}")
         ax2.axhline(pct / 100, color=col, ls=":", alpha=0.4)
@@ -84,17 +97,20 @@ def run_part2(seed=42):
         metrics[f"p2_5_{k}"] = f"{v:.2f}"
     for k, v in stats100.items():
         metrics[f"p2_100_{k}"] = f"{v:.2f}"
-    metrics.update({
-        "p2_100_weighted_avg": f"{weighted_avg:.2f}",
-        "p2_100_p25": f"{p25:.2f}",
-        "p2_100_p50": f"{p50:.2f}",
-        "p2_100_p75": f"{p75:.2f}",
-    })
+    metrics.update(
+        {
+            "p2_100_weighted_avg": f"{weighted_avg:.2f}",
+            "p2_100_p25": f"{p25:.2f}",
+            "p2_100_p50": f"{p50:.2f}",
+            "p2_100_p75": f"{p75:.2f}",
+        }
+    )
     return metrics
 
 
 if __name__ == "__main__":
     import os
+
     os.makedirs("outputs/plots", exist_ok=True)
     metrics = run_part2()
     print(metrics)
